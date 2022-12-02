@@ -1,5 +1,7 @@
 let actividad;
 let horario;
+let socios_registrados = 0;
+const socios = [];
 alert('Bienvenido al sistema de reservass de actividades del Club Social y Deportivo FING');
 
 class Socio{
@@ -11,6 +13,7 @@ class Socio{
         this.mail = mail;
         this.password = password;
         this.reservas_activas = 0;
+        this.reservado = [[0],[0],[0]]
     }
     registro(){
         this.nombre = prompt('Ingresa tu nombre:').toUpperCase();
@@ -20,17 +23,30 @@ class Socio{
         this.mail = prompt('Ingresa tu dirección de correo:');
         this.password = prompt('Ingresa una contraseña:');
     }
-}
-const socio1 = new Socio();
-while (confirm('¿Desea realizar una reserva?')){
-    if (confirm('¿Desea registrarse?')){
-        socio1.registro();
-        alert('Registro exitoso!');
+    reserva(dia, hora, actividad){
+        this.reservado[0][this.reservas_activas]=dia;
+        this.reservado[1][this.reservas_activas]=hora;
+        this.reservado[2][this.reservas_activas]=actividad;
+        this.reservas_activas += 1;
     }
-    
+}
+
+do{
+    const socio1 = new Socio();
+    if (!confirm('¿Se encuentra registrado?')){
+        socio1.registro();
+        if(socios.some(socio => socio.documento == socio1.documento)){
+            alert('El documento de identidad ingresado ya se encuentra registrado')
+        }else{
+            socios.push(socio1);
+            socios_registrados += 1;
+            alert('Registro exitoso!');    
+        }
+    }
     let user = prompt('Ingresa tu numero de documento sin puntos ni guiones \nUsuario:');
     let error = 0;
-    while (user != socio1.documento) {
+    let socio_ingresado = socios.find((socio_buscado) => socio_buscado.documento == user);
+    while (undefined == socio_ingresado) {
         alert('Usuario incorrecto');
         error += 1;
         if(error==5){
@@ -40,11 +56,11 @@ while (confirm('¿Desea realizar una reserva?')){
             break;
         }
         user = prompt('Ingresa tu numero de documento sin puntos ni guiones \nUsuario:');
+        socio_ingresado = socios.find((socio_buscado) => socio_buscado.documento == user);
     }
-    
     let password = prompt('Ingrese su contraseña:');
     error = 0
-    while (password != socio1.password) {
+    while (password != socio_ingresado.password) {
         alert('Contraseña incorrecta');
         error += 1;
         if(error==5){
@@ -56,223 +72,226 @@ while (confirm('¿Desea realizar una reserva?')){
         }
         password = prompt('Ingrese su contraseña:');
     }
-    
-    alert('Bienvenido ' + socio1.nombre + ' ' + socio1.apellido);
-    
-    let dia = prompt('¿Qué día deseas reservar? \nIngresa un día (de lunes a viernes)').toUpperCase();
-    while (dia != 'LUNES' && dia != 'MARTES' && dia != 'MIERCOLES' && dia != 'JUEVES' && dia != 'VIERNES'){
-        alert('Día incorrecto');
-        dia = prompt('Ingresa el día que deseas realizar la actividad (de lunes a viernes)').toUpperCase();
-    }
-    switch (dia){
-        case 'LUNES':
-            actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-            while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
-                alert('Actividad incorrecta');
+    alert('Bienvenido ' + socio_ingresado.nombre + ' ' + socio_ingresado.apellido);
+    do{
+        let dia = prompt('¿Qué día deseas reservar? \nIngresa un día (de lunes a viernes)').toUpperCase();
+        while (dia != 'LUNES' && dia != 'MARTES' && dia != 'MIERCOLES' && dia != 'JUEVES' && dia != 'VIERNES'){
+            alert('Día incorrecto');
+            dia = prompt('Ingresa el día que deseas realizar la actividad (de lunes a viernes)').toUpperCase();
+        }
+        switch (dia){
+            case 'LUNES':
                 actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-            }
-            switch (actividad){
-                case 'GIMNASIA':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
+                    alert('Actividad incorrecta');
+                    actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
+                }
+                switch (actividad){
+                    case 'GIMNASIA':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'BASKETBOL':
-                    horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'BASKETBOL':
                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'FUTBOL':
-                    horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'FUTBOL':
                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'VOLEY':
-                    horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-                    while (horario != '21:00' && horario != '22:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'VOLEY':
                         horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'SPINNING':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '21:00' && horario != '22:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'SPINNING':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-            }
-            break;
-        case 'MARTES':
-            actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-            while (actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'AJEDREZ' && actividad != 'AEROBICO'){
-                alert('Actividad incorrecta');
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                }
+                break;
+            case 'MARTES':
                 actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-            }
-            switch (actividad){
-                case 'FUTBOL':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                while (actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'AJEDREZ' && actividad != 'AEROBICO'){
+                    alert('Actividad incorrecta');
+                    actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
+                }
+                switch (actividad){
+                    case 'FUTBOL':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'VOLEY':
-                    horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'VOLEY':
                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'AJEDREZ':
-                    horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'AJEDREZ':
                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'AEROBICO':
-                    horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-                    while (horario != '20:00' && horario != '21:00' && horario != '22:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'AEROBICO':
                         horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-                    }
-                    break
-            }
-            break;
-        case 'MIERCOLES':
-            actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-            while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
-                alert('Actividad incorrecta');
+                        while (horario != '20:00' && horario != '21:00' && horario != '22:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
+                        }
+                        break
+                }
+                break;
+            case 'MIERCOLES':
                 actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-            }
-            switch (actividad){
-                case 'GIMNASIA':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
+                    alert('Actividad incorrecta');
+                    actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
+                }
+                switch (actividad){
+                    case 'GIMNASIA':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'BASKETBOL':
-                    horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'BASKETBOL':
                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'FUTBOL':
-                    horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'FUTBOL':
                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'VOLEY':
-                    horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-                    while (horario != '21:00' && horario != '22:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'VOLEY':
                         horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'SPINNING':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '21:00' && horario != '22:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'SPINNING':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-            }
-            break;
-        case 'JUEVES':
-            actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-            while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
-                alert('Actividad incorrecta');
-                actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-            }
-            switch (actividad){
-                case 'FUTBOL':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                }
+                break;
+            case 'JUEVES':
+                actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
+                while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
+                    alert('Actividad incorrecta');
+                    actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
+                }
+                switch (actividad){
+                    case 'FUTBOL':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'VOLEY':
-                    horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'VOLEY':
                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'AJEDREZ':
-                    horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'AJEDREZ':
                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'AEROBICO':
-                    horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-                    while (horario != '20:00' && horario != '21:00' && horario != '22:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'AEROBICO':
                         horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-                    }
-                    break
-            }
-            break;
-        case 'VIERNES':
-            actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-            while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
-                alert('Actividad incorrecta');
+                        while (horario != '20:00' && horario != '21:00' && horario != '22:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
+                        }
+                        break
+                }
+                break;
+            case 'VIERNES':
                 actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-            }
-            switch (actividad){
-                case 'GIMNASIA':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
+                    alert('Actividad incorrecta');
+                    actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
+                }
+                switch (actividad){
+                    case 'GIMNASIA':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'BASKETBOL':
-                    horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'BASKETBOL':
                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'FUTBOL':
-                    horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'FUTBOL':
                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'VOLEY':
-                    horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-                    while (horario != '21:00' && horario != '22:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'VOLEY':
                         horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-                    }
-                    break
-                case 'SPINNING':
-                    horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-                        alert('Horario incorrecto');
+                        while (horario != '21:00' && horario != '22:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
+                        }
+                        break
+                    case 'SPINNING':
                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-                    }
-                    break
-            }
-            break;
+                        while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
+                            alert('Horario incorrecto');
+                            horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
+                        }
+                        break
+                }
+                break;
+        }
+        socio_ingresado.reserva(dia, horario, actividad);
+        alert('Reserva exitosa!\n\nSocio/a: ' + socio_ingresado.nombre + ' ' + socio_ingresado.apellido + '\nActividad: ' + socio_ingresado.reservado[2][socio_ingresado.reservas_activas-1] + '\nDía: ' + socio_ingresado.reservado[0][socio_ingresado.reservas_activas-1] + '\nHora: ' + socio_ingresado.reservado[1][socio_ingresado.reservas_activas-1])
+    }while (confirm('¿Desea realizar otra reserva?'))
+    alert('Usted tiene un total de ' + socio_ingresado.reservas_activas + ' reservas activas:');
+    for (let i=0;i<socio_ingresado.reservas_activas;i++){
+        alert('Reserva N°: ' + (i+1) + '\nActividad: ' + socio_ingresado.reservado[2][i] + '\nDía: ' + socio_ingresado.reservado[0][i] + '\nHora: ' + socio_ingresado.reservado[1][i]);
     }
-    
-    alert('Reserva exitosa!\n\nSocio/a: ' + socio1.nombre + ' ' + socio1.apellido + '\nActividad: ' + actividad + '\nDía: ' + dia + '\nHora: ' + horario)
-    
-}
+}while (confirm('¿Desea cambiar de usuario?'))
