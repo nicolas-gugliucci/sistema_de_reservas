@@ -13,7 +13,7 @@ class Socio{
         this.mail = mail;
         this.password = password;
         this.reservas_activas = 0;
-        this.reservado = [[0],[0],[0]]
+        this.reservado = [[0,0,0]]
     }
     registro(){
         this.nombre = prompt('Ingresa tu nombre:').toUpperCase();
@@ -24,10 +24,15 @@ class Socio{
         this.password = prompt('Ingresa una contraseña:');
     }
     reserva(dia, hora, actividad){
-        this.reservado[0][this.reservas_activas]=dia;
-        this.reservado[1][this.reservas_activas]=hora;
-        this.reservado[2][this.reservas_activas]=actividad;
+        this.reservado[this.reservas_activas][0]=dia;
+        this.reservado[this.reservas_activas][1]=hora;
+        this.reservado[this.reservas_activas][2]=actividad;
+        this.reservado.push([0,0,0]);
         this.reservas_activas += 1;
+    }
+    cancelar(a_cancelar){
+        this.reservado.splice(a_cancelar+1,1);
+        this.reservas_activas -= 1;
     }
 }
 
@@ -52,8 +57,9 @@ do{
         if(error==5){
             alert('Ha ingresado incorrectamente su usuario 5 veces, deberá registrarse nuevamente');
             socio1.registro();
+            socios.push(socio1);
+            socios_registrados += 1;
             alert('Registro exitoso!');
-            break;
         }
         user = prompt('Ingresa tu numero de documento sin puntos ni guiones \nUsuario:');
         socio_ingresado = socios.find((socio_buscado) => socio_buscado.documento == user);
@@ -66,9 +72,11 @@ do{
         if(error==5){
             alert('Ha ingresado incorrectamente su contraseña 5 veces, deberá registrarse nuevamente');
             socio1.registro();
+            socios.push(socio1);
+            socios_registrados += 1;
             alert('Registro exitoso!');
-            let user = prompt('Ingresa tu numero de documento sin puntos ni guiones \nUsuario:');
-            break;
+            user = prompt('Ingresa tu numero de documento sin puntos ni guiones \nUsuario:');
+            socio_ingresado = socios.find((socio_buscado) => socio_buscado.documento == user);
         }
         password = prompt('Ingrese su contraseña:');
     }
@@ -207,7 +215,7 @@ do{
                 break;
             case 'JUEVES':
                 actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-                while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
+                while (actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'AJEDREZ' && actividad != 'AEROBICO'){
                     alert('Actividad incorrecta');
                     actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
                 }
@@ -288,10 +296,12 @@ do{
                 break;
         }
         socio_ingresado.reserva(dia, horario, actividad);
-        alert('Reserva exitosa!\n\nSocio/a: ' + socio_ingresado.nombre + ' ' + socio_ingresado.apellido + '\nActividad: ' + socio_ingresado.reservado[2][socio_ingresado.reservas_activas-1] + '\nDía: ' + socio_ingresado.reservado[0][socio_ingresado.reservas_activas-1] + '\nHora: ' + socio_ingresado.reservado[1][socio_ingresado.reservas_activas-1])
+        alert('Reserva exitosa!\n\nSocio/a: ' + socio_ingresado.nombre + ' ' + socio_ingresado.apellido + '\nActividad: ' + socio_ingresado.reservado[socio_ingresado.reservas_activas-1][2] + '\nDía: ' + socio_ingresado.reservado[socio_ingresado.reservas_activas-1][0] + '\nHora: ' + socio_ingresado.reservado[socio_ingresado.reservas_activas-1][1])
     }while (confirm('¿Desea realizar otra reserva?'))
     alert('Usted tiene un total de ' + socio_ingresado.reservas_activas + ' reservas activas:');
     for (let i=0;i<socio_ingresado.reservas_activas;i++){
-        alert('Reserva N°: ' + (i+1) + '\nActividad: ' + socio_ingresado.reservado[2][i] + '\nDía: ' + socio_ingresado.reservado[0][i] + '\nHora: ' + socio_ingresado.reservado[1][i]);
+        alert('Reserva N°: ' + (i+1) + '\nActividad: ' + socio_ingresado.reservado[i][2] + '\nDía: ' + socio_ingresado.reservado[i][0] + '\nHora: ' + socio_ingresado.reservado[i][1]);
     }
 }while (confirm('¿Desea cambiar de usuario?'))
+console.log(socios);
+console.log(socios.filter((socio) => socio.nombre == 'NICOLAS'));
