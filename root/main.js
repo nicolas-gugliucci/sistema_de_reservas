@@ -304,4 +304,3 @@ do{
     }
 }while (confirm('¿Desea cambiar de usuario?'))
 console.log(socios);
-console.log(socios.filter((socio) => socio.nombre == 'NICOLAS'));
