@@ -1,444 +1,243 @@
+let socio_ingresado = '';
 let actividad;
 let horario;
+let actividad_anterior = '';
+let dia_anterior = '';
+let i=1;
+let dia = '';
+let horario_nuevo = undefined;
+const div_actividadess = document.getElementById('actividades');
+actividades_totales().forEach((actividad) => {
+    let h3 = document.createElement('h3');
+    i%2 != 0 ? h3.setAttribute("class", "oscuro"): h3.setAttribute("class", "claro");
+    h3.innerHTML = `${actividad}`
+    div_actividadess.append(h3);
+    i++;
+})
+
+i=1;
+const div_lmv = document.getElementById('lmv');
+const div_mj = document.getElementById('mj');
+actividades_totales().forEach((actividad) =>  {
+    let div_horario_lmv = document.createElement('div');
+    if (actividades_por_dia('lunes').includes(actividad) && actividades_por_dia('miercoles').includes(actividad) && actividades_por_dia('viernes').includes(actividad)){
+        i%2 != 0 ? div_horario_lmv.setAttribute("class", "oscuro"): div_horario_lmv.setAttribute("class", "claro");
+        div_horario_lmv.innerHTML = '';
+        div_lmv.append(div_horario_lmv);
+        horarios(actividad, 'lunes').forEach((horario) => {
+            let p = document.createElement('p');
+            p.innerHTML = `${horario}`;
+            div_horario_lmv.appendChild(p);
+        });
+    }else{
+        i%2 != 0 ? div_horario_lmv.setAttribute("class", "oscuro"): div_horario_lmv.setAttribute("class", "claro");
+        div_lmv.append(div_horario_lmv);
+    };
+    let div_horario_mj = document.createElement('div');
+    if (actividades_por_dia('martes').includes(actividad) && actividades_por_dia('jueves').includes(actividad)){
+        i%2 != 0 ? div_horario_mj.setAttribute("class", "oscuro"): div_horario_mj.setAttribute("class", "claro");
+        div_horario_mj.innerHTML = '';
+        div_mj.append(div_horario_mj);
+        horarios(actividad, 'martes').forEach((horario) => {
+            let p = document.createElement('p');
+            p.innerHTML = `${horario}`;
+            div_horario_mj.appendChild(p);
+        });
+    }else{
+        i%2 != 0 ? div_horario_mj.setAttribute("class", "oscuro"): div_horario_mj.setAttribute("class", "claro");
+        div_mj.append(div_horario_mj);
+    };
+    i++;
+})
+
+
 
 const input_usuario = document.getElementById('usuario');
 const formulario_reserva = document.getElementById('reserva_form');
+let alerta_activada = 0;
 formulario_reserva.addEventListener('submit', validar_form);
-form_dia();
 function validar_form(e){
     e.preventDefault();
     const datos = new FormData(formulario_reserva);
     const usuario = datos.get('usuario');
     const contrasena = datos.get('contrasena');
-    let socio_ingresado = socios.find((socio_buscado) => socio_buscado.documento == usuario);
-    if (undefined == socio_ingresado) {
-        let div = document.createElement('div');
-        div.setAttribute("id", "alerta_usuario");
-        div.innerHTML = `
-        <p>El usuario ingresado no se encuentra registrado</p>
-        `;
-        const div_usuario = document.getElementById('div_usuario');
-//eliminar alertas
-        div_usuario.appendChild(div);
-        const input_usuario = document.getElementById('usuario');
-        input_usuario.addEventListener('input', () => div.remove());
+    socio_ingresado = socios.find((socio_buscado) => socio_buscado.documento == usuario);
+    if (socio_ingresado == undefined) {
+        if (!alerta_activada){
+            let div_alerta = document.createElement('div');
+            div_alerta.setAttribute("id", "alerta_usuario");
+            div_alerta.innerHTML = `
+                <p>El usuario ingresado no se encuentra registrado</p>
+            `;
+            const div_usuario = document.getElementById('div_usuario');
+            div_usuario.appendChild(div_alerta);
+            alerta_activada = 1;
+            const input_usuario = document.getElementById('usuario');
+            input_usuario.addEventListener('input', () => {
+                div_alerta.remove();
+                alerta_activada = 0;
+            });
+        };
     }else if(contrasena != socio_ingresado.password){
-        let div = document.createElement('div');
-        div.setAttribute("id", "alerta_contrasena");
-        div.innerHTML = `
-        <p>Contraseña incorrecta</p>
-        `;
-        const div_contrasena = document.getElementById('div_contrasena');
-//eliminar alertas
-        div_contrasena.appendChild(div);
-        const input_contrasena = document.getElementById('usuario');
-        input_contrasena.addEventListener('input', () => div.remove());
+        if (!alerta_activada){
+            let div_alerta = document.createElement('div');
+            div_alerta.setAttribute("id", "alerta_contrasena");
+            div_alerta.innerHTML = `
+                <p>Contraseña incorrecta</p>
+            `;
+            const div_contrasena = document.getElementById('div_contrasena');
+            div_contrasena.appendChild(div_alerta);
+            alerta_activada = 1;
+            const input_contrasena = document.getElementById('contrasena');
+            input_contrasena.addEventListener('input', () => {
+                div_alerta.remove();
+                alerta_activada = 0;
+            });
+        }
     }else{
         form_dia();
     }
 };
 
 function form_dia(){
-    // const dias = ['Martes', 'Miércoles', 'Jueves', 'Viernes'];
-    // const div_dias = dociment.createElement('div')
-    // div_dias.setAttribute("id", "div_dias");
-    // div_dias.innerHTML = `
-    //     <input type="radio" class="btn-check" name="dias" id="lunes" autocomplete="off" checked>
-    //     <label class="btn btn-secondary" for="lunes">Lunes</label>
-    //     `;
-    // formulario_reserva.append(div_dias);
-    // dias.forEach((dia) => {
-    //     formulario_reserva.innerHTML = `
-    //     <input type="radio" class="btn-check" name="dias" id="${dia.toLocaleLowerCase}" autocomplete="off">
-    //     <label class="btn btn-secondary" for="${dia.toLocaleLowerCase}">${dia}</label>
-    //     `;
-    //     formulario_reserva.append(div_dias);
-    // });
-    // formulario_reserva.innerHTML = `
-    //     <div id="div_actividades"></div>
-    //     `;
+    formulario_reserva.removeEventListener('submit', validar_form);
+    formulario_reserva.innerHTML='';
+    const dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
+    const div_dias = document.createElement('div');
+    div_dias.setAttribute("id", "div_dias");
+    div_dias.innerHTML = '';
+    formulario_reserva.append(div_dias);
+    let i= 0;
+    dias.forEach((dia) => {
+        let input = document.createElement('input');
+        input.setAttribute("type", "radio");
+        input.setAttribute("class", "btn-check");
+        input.setAttribute("name", "dias");
+        input.setAttribute("id", `${dia.toLocaleLowerCase()}`);
+        input.setAttribute("autocomplete", `off`);
+        i==0 ? input.setAttribute("checked", ""):{};
+        i++;
+        let label = document.createElement('label');
+        label.setAttribute("class", "btn btn-secondary");
+        label.setAttribute("for", `${dia.toLocaleLowerCase()}`);
+        label.innerHTML = `${dia}`;
+        div_dias.appendChild(input);
+        div_dias.appendChild(label);
+    });
+    const div_actividades_diarias = document.createElement('div');
+    div_actividades_diarias.setAttribute("id", "div_actividades_diarias")
+    div_actividades_diarias.innerHTML = '';
+    formulario_reserva.append(div_actividades_diarias);
+    const boton = document.createElement('button');
+    boton.innerHTML='Siguiente';
+    boton.setAttribute("type", "submit")
+    boton.setAttribute("class", "btn btn-primary")
+    boton.setAttribute("id", "pre_confirma")
+    boton.setAttribute("disabled", "")
+    formulario_reserva.append(boton);
+    const div_dia = document.getElementById('div_dias');
+    div_dia.addEventListener('change', chequear_dia);
+}
+
+function chequear_dia(){
+    dia =  (document.querySelector(".btn-check:checked")).id;
+    const div_actividades_diarias = document.getElementById('div_actividades_diarias');
+    let i = 0;
+    div_actividades_diarias.innerHTML='';
+    actividades_por_dia(dia).forEach((actividad) => {
+        const div_form = document.createElement('div');
+        div_form.setAttribute("class", "form-check");
+        if (i==0){
+            div_form.innerHTML = `
+                <input class="form-check-input actividades_form" type="radio" name="actividades" id="${actividad.toLocaleLowerCase()}" checked>
+                <label class="form-check-label" for="${actividad.toLocaleLowerCase()}">
+                    ${actividad}
+                </label>`;
+            i++;
+        }else{
+            div_form.innerHTML = `
+                <input class="form-check-input actividades_form" type="radio" name="actividades" id="${actividad.toLocaleLowerCase()}">
+                <label class="form-check-label" for="${actividad.toLocaleLowerCase()}">
+                    ${actividad}
+                </label>`;
+        }
+        div_actividades_diarias.append(div_form);
+        const div_horarios = document.createElement('div');
+        div_horarios.setAttribute("id", `horarios_${actividad.toLocaleLowerCase()}`);
+        div_horarios.innerHTML='';
+        div_actividades_diarias.append(div_horarios);
+    });
+    horario_nuevo = undefined;
+    div_actividades_diarias.addEventListener('change', chequear_actividad);
+};
+
+function chequear_actividad(){
+    actividad = (document.querySelector(".actividades_form:checked")).id;
+    const horario = (document?.querySelector(".horarios_form:checked"))?.id;
+    horario == horario_nuevo && mostrar_horarios(actividad, dia, actividad_anterior, dia_anterior);
+    horario_nuevo = (document.querySelector(".horarios_form:checked")).id;
+    actividad_anterior = actividad;
+    dia_anterior = dia;
+    const pre_confirma = document.getElementById('pre_confirma');
+    pre_confirma.removeAttribute('disabled')
+    formulario_reserva.addEventListener("submit", pantalla_confirmacion);
+};
+
+function pantalla_confirmacion(e){
+    e.preventDefault();
+    formulario_reserva.removeEventListener("submit", pantalla_confirmacion);
     formulario_reserva.innerHTML = `
-    <div id="div_dias">
-        <input type="radio" class="btn-check" name="dias" id="lunes" autocomplete="off" checked>
-        <label class="btn btn-secondary" for="lunes">Lunes</label>
+        <h4>Confirmación</h4>
+        <div id="resumen_reserva">
+            <p>Socio: ${socio_ingresado.nombre} ${socio_ingresado.apellido}</p>
+            <p>Día: ${dia}</p>
+            <p>Hora: ${horario_nuevo.slice(0,2)}:${horario_nuevo.slice(2,4)}</p>
+            <p>Actividad: ${actividad}</p>
+        </div>
+        <button type="submit" class="btn btn-primary" id="confirma">Confirmar</button>
+    `;
+    formulario_reserva.addEventListener("submit", efectuar_reserva);
+}
 
-        <input type="radio" class="btn-check" name="dias" id="martes" autocomplete="off">
-        <label class="btn btn-secondary" for="martes">Martes</label>
-
-        <input type="radio" class="btn-check" name="dias" id="miercoles" autocomplete="off">
-        <label class="btn btn-secondary" for="miercoles">Miércoles</label>
-
-        <input type="radio" class="btn-check" name="dias" id="jueves" autocomplete="off">
-        <label class="btn btn-secondary" for="jueves">Jueves</label>
-
-        <input type="radio" class="btn-check" name="dias" id="viernes" autocomplete="off">
-        <label class="btn btn-secondary" for="viernes">viernes</label>
-    </div>
-    <div id="div_actividades"></div>
+function efectuar_reserva(e){
+    e.preventDefault();
+    socio_ingresado.reserva(dia, horario_nuevo, actividad);
+    formulario_reserva.innerHTML = '';
+    alert('Reserva realizada!');
+    formulario_reserva.innerHTML = `
+        <h4>¿Desea realizar otra reserva?</h4>
+        
     `;
 }
-const div_actividades = document.getElementById('div_actividades');
-div_actividades.innerHTML = `
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="basketbol" checked>
-            <label class="form-check-label" for="basketbol">
-                Basketbol
-            </label>
-        </div>
-        <div id="horarios_basketbol"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="futbol">
-            <label class="form-check-label" for="futbol">
-                Futbol
-            </label>
-        </div>
-        <div id="horarios_futbol"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="gimnasia">
-            <label class="form-check-label" for="gimnasia">
-                Gimnasia
-            </label>
-        </div>
-        <div id="horarios_gimnasia"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="spinning">
-            <label class="form-check-label" for="spinning">
-                Spinning
-            </label>
-        </div>
-        <div id="horarios_spinning"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="voley">
-            <label class="form-check-label" for="voley">
-                Voley
-            </label>
-        </div>
-        <div id="horarios_voley"></div>
-        `;
-const div_dias = document.getElementById('div_dias');
-div_dias.addEventListener('change', chequear_dia)
-function chequear_dia(){
-    const dia =  (document.querySelector(".btn-check:checked")).id;
-    const div_actividades = document.getElementById('div_actividades');
-    if (dia == 'lunes' || dia == 'miercoles' || dia == 'viernes'){
-        
-        div_actividades.innerHTML = `
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="basketbol" checked>
-            <label class="form-check-label" for="basketbol">
-                Basketbol
-            </label>
-        </div>
-        <div id="horarios_basketbol"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="futbol">
-            <label class="form-check-label" for="futbol">
-                Futbol
-            </label>
-        </div>
-        <div id="horarios_futbol"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="gimnasia">
-            <label class="form-check-label" for="gimnasia">
-                Gimnasia
-            </label>
-        </div>
-        <div id="horarios_gimnasia"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="spinning">
-            <label class="form-check-label" for="spinning">
-                Spinning
-            </label>
-        </div>
-        <div id="horarios_spinning"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="voley">
-            <label class="form-check-label" for="voley">
-                Voley
-            </label>
-        </div>
-        <div id="horarios_voley"></div>
-        `;
-        let actividad_anterior;
-        div_actividades.addEventListener('change', chequear_actividad)
-        function chequear_actividad(){
-            const actividad =  (document.querySelector(".form-check-input:checked")).id;
-            (actividad != actividad_anterior) && horarios_lmv(actividad);
-            actividad_anterior = actividad;
-        };
-    }else{
-        div_actividades.innerHTML = `
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="aerobico" checked>
-            <label class="form-check-label" for="aerobico">
-                Aeróbico
-            </label>
-        </div>
-        <div id="horarios_aerobico"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="ajedrez">
-            <label class="form-check-label" for="ajedrez">
-                Ajedréz
-            </label>
-        </div>
-        <div id="horarios_ajedrez"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="futbol">
-            <label class="form-check-label" for="futbol">
-                Futbol
-            </label>
-        </div>
-        <div id="horarios_futbol"></div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="actividades" id="voley">
-            <label class="form-check-label" for="voley">
-                Voley
-            </label>
-        </div>
-        <div id="horarios_voley"></div>
-        `;
-        let actividad_anterior;
-        div_actividades.addEventListener('change', chequear_actividad)
-        function chequear_actividad(){
-            const actividad = (document.querySelector(".form-check-input:checked")).id;
-            (actividad != actividad_anterior) && horarios_mj(actividad);
-            actividad_anterior = actividad;
-        };
-    }
-}
 
-function horarios_mj(actividad){
-    switch (actividad){
-        case 'aerobico':
-            limpiar_horarios();
-            const horarios_aerobico = document.getElementById('horarios_aerobico');
-            horarios_aerobico.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2000" checked>
-                    <label class="form-check-label" for="2000">
-                        20:00 - 21:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2100">
-                    <label class="form-check-label" for="2100">
-                        21:00 - 22:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2200">
-                    <label class="form-check-label" for="2200">
-                        22:00 - 23:00
-                    </label>
-                </div>
-            `
-        break;
-        case 'ajedrez':
-            limpiar_horarios();
-            const horarios_ajedrez = document.getElementById('horarios_ajedrez');
-            horarios_ajedrez.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="0900" checked>
-                    <label class="form-check-label" for="0900">
-                        09:00 - 10:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1000">
-                    <label class="form-check-label" for="1000">
-                        10:00 - 11:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1100">
-                    <label class="form-check-label" for="1100">
-                        11:00 - 12:00
-                    </label>
-                </div>
-            `
-        break;
-        case 'futbol':
-            limpiar_horarios();
-            const horarios_futbol = document.getElementById('horarios_futbol');
-            horarios_futbol.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1800" checked>
-                    <label class="form-check-label" for="1800">
-                        18:00 - 19:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1900">
-                    <label class="form-check-label" for="1900">
-                        19:00 - 20:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2000">
-                    <label class="form-check-label" for="2000">
-                        20:00 - 21:00
-                    </label>
-                </div>
-            `
-        break;
-        case 'voley':
-            limpiar_horarios();
-            const horarios_voley = document.getElementById('horarios_voley');
-            horarios_voley.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1500" checked>
-                    <label class="form-check-label" for="1500">
-                        15:00 - 16:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1600">
-                    <label class="form-check-label" for="1600">
-                        16:00 - 17:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1700">
-                    <label class="form-check-label" for="1700">
-                        17:00 - 18:00
-                    </label>
-                </div>
-            `
-        break;
+function mostrar_horarios(actividad, dia, actividad_anterior, dia_anterior){
+    const horarios_actividad = document.getElementById(`horarios_${actividad.toLocaleLowerCase()}`);
+    if ((actividad != actividad_anterior) && (actividad_anterior != '') && (dia_anterior == dia || dia_anterior == '')){
+        const a_borrar = document.getElementById(`horarios_${actividad_anterior}`);
+        a_borrar.innerHTML = '';
     }
-}
+    let i = 0;
+    horarios(actividad, dia).forEach((hora) => {
+        const div_horario_form = document.createElement('div');
+        div_horario_form.setAttribute("class", "form-check");
+        if (i==0){
+            div_horario_form.innerHTML = `
+            <input class="form-check-input horarios_form" type="radio" name="horarios" id="${hora.slice(0,2)}${hora.slice(3,5)}" checked>
+            <label class="form-check-label" for="${hora.slice(0,2)}${hora.slice(3,5)}">
+                ${hora}
+            </label>`;
+            i++;
+        }else{
+            div_horario_form.innerHTML = `
+            <input class="form-check-input horarios_form" type="radio" name="horarios" id="${hora.slice(0,2)}${hora.slice(3,5)}">
+            <label class="form-check-label" for="${hora.slice(0,2)}${hora.slice(3,5)}">
+                ${hora}
+            </label>`;
+        }
+        horarios_actividad.append(div_horario_form);
+    });
+};
 
-function horarios_lmv(actividad){
-    switch (actividad){
-        case 'basketbol':
-            limpiar_horarios();
-            const horarios_basketbol = document.getElementById('horarios_basketbol');
-            horarios_basketbol.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1500" checked>
-                    <label class="form-check-label" for="1500">
-                        15:00 - 16:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1600">
-                    <label class="form-check-label" for="1600">
-                        16:00 - 17:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1700">
-                    <label class="form-check-label" for="1700">
-                        17:00 - 18:00
-                    </label>
-                </div>
-            `
-        break;
-        case 'futbol':
-            limpiar_horarios();
-            const horarios_futbol = document.getElementById('horarios_futbol');
-            horarios_futbol.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="0900" checked>
-                    <label class="form-check-label" for="0900">
-                        09:00 - 10:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1000">
-                    <label class="form-check-label" for="1000">
-                        10:00 - 11:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1100">
-                    <label class="form-check-label" for="1100">
-                        11:00 - 12:00
-                    </label>
-                </div>
-            `
-        break;
-        case 'gimnasia':
-            limpiar_horarios();
-            const horarios_gimnasia = document.getElementById('horarios_gimnasia');
-            horarios_gimnasia.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1800" checked>
-                    <label class="form-check-label" for="1800">
-                        18:00 - 19:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1900">
-                    <label class="form-check-label" for="1900">
-                        19:00 - 20:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2000">
-                    <label class="form-check-label" for="2000">
-                        20:00 - 21:00
-                    </label>
-                </div>
-            `
-        break;
-        case 'spinning':
-            limpiar_horarios();
-            const horarios_spinning = document.getElementById('horarios_spinning');
-            horarios_spinning.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1800" checked>
-                    <label class="form-check-label" for="1800">
-                        18:00 - 19:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="1900">
-                    <label class="form-check-label" for="1900">
-                        19:00 - 20:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2000">
-                    <label class="form-check-label" for="2000">
-                        20:00 - 21:00
-                    </label>
-                </div>
-            `
-        break;
-        case 'voley':
-            limpiar_horarios();
-            const horarios_voley = document.getElementById('horarios_voley');
-            horarios_voley.innerHTML = `
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2100" checked>
-                    <label class="form-check-label" for="2100">
-                        21:00 - 22:00
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="horarios" id="2200">
-                    <label class="form-check-label" for="2200">
-                        22:00 - 23:00
-                    </label>
-                </div>
-            `
-        break;
-    }
-}
-
-function limpiar_horarios(){
-    const actividades =[
-                    document?.getElementById('horarios_aerobico'), 
-                    document?.getElementById('horarios_ajedrez'), 
-                    document?.getElementById('horarios_basketbol'), 
-                    document?.getElementById('horarios_futbol'),
-                    document?.getElementById('horarios_gimnasia'),
-                    document?.getElementById('horarios_spinning'),
-                    document?.getElementById('horarios_voley')
-                ];
-    actividades.forEach((actividad) => {(actividad!=null)&&(actividad.innerHTML='')});
-}
 
 
 // do{
@@ -487,219 +286,6 @@ function limpiar_horarios(){
 //     }
 //     alert('Bienvenido ' + socio_ingresado.nombre + ' ' + socio_ingresado.apellido);
 //     do{
-//         let dia = prompt('¿Qué día deseas reservar? \nIngresa un día (de lunes a viernes)').toUpperCase();
-//         while (dia != 'LUNES' && dia != 'MARTES' && dia != 'MIERCOLES' && dia != 'JUEVES' && dia != 'VIERNES'){
-//             alert('Día incorrecto');
-//             dia = prompt('Ingresa el día que deseas realizar la actividad (de lunes a viernes)').toUpperCase();
-//         }
-//         switch (dia){
-//             case 'LUNES':
-//                 actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
-//                     alert('Actividad incorrecta');
-//                     actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 }
-//                 switch (actividad){
-//                     case 'GIMNASIA':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'BASKETBOL':
-//                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'FUTBOL':
-//                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'VOLEY':
-//                         horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-//                         while (horario != '21:00' && horario != '22:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'SPINNING':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                 }
-//                 break;
-//             case 'MARTES':
-//                 actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 while (actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'AJEDREZ' && actividad != 'AEROBICO'){
-//                     alert('Actividad incorrecta');
-//                     actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 }
-//                 switch (actividad){
-//                     case 'FUTBOL':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'VOLEY':
-//                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'AJEDREZ':
-//                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'AEROBICO':
-//                         horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-//                         while (horario != '20:00' && horario != '21:00' && horario != '22:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                 }
-//                 break;
-//             case 'MIERCOLES':
-//                 actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
-//                     alert('Actividad incorrecta');
-//                     actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 }
-//                 switch (actividad){
-//                     case 'GIMNASIA':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'BASKETBOL':
-//                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'FUTBOL':
-//                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'VOLEY':
-//                         horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-//                         while (horario != '21:00' && horario != '22:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'SPINNING':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                 }
-//                 break;
-//             case 'JUEVES':
-//                 actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 while (actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'AJEDREZ' && actividad != 'AEROBICO'){
-//                     alert('Actividad incorrecta');
-//                     actividad = prompt('Actividades disponibles: Futbol, Voley, Ajedrez y Aerobico \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 }
-//                 switch (actividad){
-//                     case 'FUTBOL':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'VOLEY':
-//                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'AJEDREZ':
-//                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'AEROBICO':
-//                         horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-//                         while (horario != '20:00' && horario != '21:00' && horario != '22:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 20:00, 21:00 y 22:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                 }
-//                 break;
-//             case 'VIERNES':
-//                 actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 while (actividad != 'GIMNASIA' && actividad != 'BASKETBOL' && actividad != 'FUTBOL' && actividad != 'VOLEY' && actividad != 'SPINNING'){
-//                     alert('Actividad incorrecta');
-//                     actividad = prompt('Actividades disponibles: Gimnasia, Basketbol, Futbol, Voley y Spinning \nIngresa que actividad deseas realizar:').toUpperCase();
-//                 }
-//                 switch (actividad){
-//                     case 'GIMNASIA':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'BASKETBOL':
-//                         horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         while (horario != '15:00' && horario != '16:00' && horario != '17:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 15:00, 16:00 y 17:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'FUTBOL':
-//                         horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         while (horario != '09:00' && horario != '10:00' && horario != '11:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 09:00, 10:00 y 11:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'VOLEY':
-//                         horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-//                         while (horario != '21:00' && horario != '22:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 21:00 y 22:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                     case 'SPINNING':
-//                         horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         while (horario != '18:00' && horario != '19:00' && horario != '20:00'){
-//                             alert('Horario incorrecto');
-//                             horario = prompt('Horarios disponibles: 18:00, 19:00 y 20:00 \nIngresa un horario:');
-//                         }
-//                         break
-//                 }
-//                 break;
-//         }
 //         socio_ingresado.reserva(dia, horario, actividad);
 //         alert('Reserva exitosa!\n\nSocio/a: ' + socio_ingresado.nombre + ' ' + socio_ingresado.apellido + '\nActividad: ' + socio_ingresado.reservado[socio_ingresado.reservas_activas-1][2] + '\nDía: ' + socio_ingresado.reservado[socio_ingresado.reservas_activas-1][0] + '\nHora: ' + socio_ingresado.reservado[socio_ingresado.reservas_activas-1][1])
 //     }while (confirm('¿Desea realizar otra reserva?'))
