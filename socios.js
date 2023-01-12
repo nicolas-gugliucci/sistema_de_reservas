@@ -1,19 +1,3 @@
-const socios_del_club = [
-    {
-    nombre: "Alberto",
-    apellido: "Rodriguez",
-    documento: 12345678,
-    edad:50,
-    mail: "alberto.r@gmail.com",
-    },
-    {
-    nombre: "Nicolas",
-    apellido: "Gugliucci",
-    documento: 56594112,
-    edad:20,
-    mail: "gugliucci.nicolas@gmail.com",
-    }
-];
 
 const socios = [];
 

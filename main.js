@@ -236,12 +236,21 @@ function proceso_registro(){
     registro_form.addEventListener("submit", confirmar_contrasenas);
     ocultar_login();
 }
+let socios_del_club = [];
 
-function confirmar_contrasenas(e){
+async function socio_del_club(){
+    const resp = await fetch('./socios.json');
+    const data = await resp.json();
+    socios_del_club = data;
+};
+
+socio_del_club();
+async function confirmar_contrasenas(e){
     e.preventDefault();
     const registro_form = document.getElementById('registro_form');
     const datos = new FormData(registro_form);
     const usuario = datos.get('usuario_registro');
+    await socio_del_club();
     if (socios_del_club.find((socio) => socio.documento == usuario) == undefined){
         alerta_socio_inexistente();
     }else if(socios.find((socio) => socio.documento == usuario)){
@@ -267,11 +276,8 @@ function registrar_socio(usuario, contrasena){
 };
 
 function cerrar_div_registro(){
-    const inicio_registro = document.getElementById('registro');
     const div_registro = document.getElementById("div_registro");
     div_registro.remove();
-    inicio_registro.addEventListener("mouseup", proceso_registro);
-    ocultar_login();
 };
 
 function alerta_socio_inexistente(){
