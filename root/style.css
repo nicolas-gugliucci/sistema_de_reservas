@@ -1,248 +1,366 @@
+/*----------------------GENERALES---------------------------*/
 *, ul{
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    list-style: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
 }
 
 html{
-    font-size: 62.5%;
+  font-size: 62.5%;
 }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-    font-weight: initial;
-    line-height: normal;
+  margin: 0;
+  font-weight: initial;
+  line-height: normal;
 }
 
 a{
-    color: black;
-    text-decoration: none;
+  color: black;
+  text-decoration: none;
 }
 h1{
-    font-size: 4.2rem;
+  font-size: 4.2rem;
 }
 h2{
-    font-size: 3rem;
+  font-size: 3rem;
 }
-h3, label{
-    font-size: 2.3rem;
+h3{
+  font-size: 2.3rem;
 }
-h4{
-    font-size: 2rem;
+h4, label{
+  font-size: 2rem;
 }
-p, a, button, input{
-    font-size: 1.5rem !important;
+p, a, button, input, text{
+  font-size: 1.5rem !important;
 }
 
 body{
-    background-color: aqua;
+  background-color: aqua;
 }
 .claro{
-    background-color: lightseagreen;
+  background-color: lightseagreen;
 }
 .oscuro{
-    background-color: darkcyan
+  background-color: #079E9E;
 }
 .encabezado{
-    background-color: darkturquoise;
+  background-color: darkturquoise;
 }
 
-/*-------------------header-------------- */
+/*-------------------HEADER--------------*/
 header{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
-header div{
-    display: flex;
-    align-items: center;
+header h1{
+position: absolute;
+left: 50%;
+transform: translate(-50%, 0%);
 }
 
 header button{
-    align-self: stretch;
-    width: 64px;
-    background: none;
-    border: none;
+  align-self: stretch;
+  background: none;
+  border: none;
 }
 header button i{
-    font-size: 4rem;
+  font-size: 4rem;
 }
 
 nav{
-    position: sticky;
-    top: 0px;
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: darkturquoise;
+  position: sticky;
+  top: 0px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: darkturquoise;
 }
 
 nav ul{
-    display: flex;
+  display: flex;
 }
 
 nav ul li{
-    margin: 4px 10px;
+  margin: 4px 10px;
 }
+
+.li_activo a{
+color: rgb(171, 254, 255);
+text-decoration: wavy underline;;
+}
+
+.li_inactivo a{
+color: black;
+text-decoration: none;
+}
+
+#login{
+margin: 0 10px 0 0;
+display: flex;
+align-items: center;
+}
+
+#form_ingreso{
+display: flex;
+flex-direction: column;
+}
+
+#div_login{
+position: absolute;
+top: 64px;
+right: 0px;
+padding: 0 10px; /*0px*/
+z-index: 10;
+background-color: aqua;
+border-bottom: 1px outset aqua;
+border-left: 1px inset aqua;
+}
+
+#registro{
+margin: 0;
+padding: 0;
+vertical-align: baseline;
+border: none;
+width: 101px;
+}
+
+#div_registro{
+z-index: 7;
+display: flex;
+flex-direction: column;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 280 +px;
+background-color: aqua;
+display: flex;
+align-items: center;
+justify-content: center;
+border-bottom: 1px outset aqua;
+border-left: 1px inset aqua;
+}
+
+#registro_form{
+padding: 0 10px 5px 10px;
+display: flex;
+flex-direction: column;
+}
+
 /*-------------------inicio-------------- */
 #carousel{
-    overflow: hidden;
-    max-height: 80vh;
+  overflow: hidden;
+  max-height: 80vh;
 }
 
 /*-------------------actyhor-------------- */
 #actyhor h2{
-    margin-left: 20px;
-    margin-top: 30px;
+  margin-left: 20px;
+  margin-top: 30px;
 }
 
 #grilla{
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-template-rows: 1fr;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  grid-template-rows: 1fr;
 }
 
 #grilla p{
-    text-align: center;
+  text-align: center;
 }
 
 #actividades{
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr repeat(7,3fr);
-    align-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr repeat(7,3fr);
+  align-items: center;
 
 }
 
 #actividades div, #actividades h3{
-    align-self: stretch;
-    justify-self: stretch;
-    align-items: center;
+  align-self: stretch;
+  justify-self: stretch;
+  align-items: center;
 }
 
 #actividades h3{
-    padding-left: 20px;
+  padding-left: 20px;
 }
 
 #lmv{
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr repeat(7,3fr);
-    justify-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr repeat(7,3fr);
+  justify-items: center;
 
 }
 
 #lmv div, #lmv h3{
-    align-self: stretch;
-    justify-self: stretch;
-    text-align: center;
+  align-self: stretch;
+  justify-self: stretch;
+  text-align: center;
 }
 
 #mj{
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr repeat(7,3fr);
-    justify-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr repeat(7,3fr);
+  justify-items: center;
 
 }
 
 #mj div, #mj h3{
-    align-self: stretch;
-    justify-self: stretch;
-    text-align: center;
+  align-self: stretch;
+  justify-self: stretch;
+  text-align: center;
 }
 
 
 /*-------------------reservas-------------- */
 #reservas h2{
-    margin-left: 20px;
-    margin-top: 30px;
+  margin-left: 20px;
+  margin-top: 30px;
 }
 #reserva_container{
-    display: flex;
-    justify-content: center;
-    margin: 30px 0;
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
 }
 
 #reserva_form{
-    padding: 20px;
-    border: 2px solid darkturquoise;
-    border-radius: 10%;
+  padding: 20px;
+  border: 10px double darkturquoise;
+  border-radius: 8%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 450px;
+  height: 491px;
+}
+
+#resact{
+margin-left: 20px;
+margin-top: 30px;
+}
+
+#cerrar_sesion{
+width: 140px; 
+}
+
+#div_dias{
+display: flex;
+justify-content: space-between;
+}
+
+#div_botones{
+display: flex;
+justify-content: flex-end;
+}
+
+#div_botones_confirm{
+display: flex;
+justify-content: flex-end;
+}
+
+#resumen_reserva{
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+height: 60%;
+margin-left: 30px;
+}
+
+#label{
+margin-bottom: 10px;
+}
+
+#cancelar{
+margin-right: 10px;
+}
+
+#div_actividades_diarias{
+margin-left: 5px;
+}
+
+#atras{
+margin-right: 10px;
 }
 
 /*-------------------footer-------------- */
 footer {
-  color: black;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: darkturquoise;
+color: black;
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+background-color: darkturquoise;
 }
 @media screen and (max-width: 480px) {
-  footer {
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-  }
+footer {
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+}
 }
 footer div {
-  margin-left: 10px;
+margin-left: 10px;
 }
 footer div h4 {
-  margin-bottom: 20px;
+margin-bottom: 20px;
 }
 footer div a {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+display: flex;
+flex-direction: row;
+align-items: flex-start;
 }
 footer div a i {
-  font-size: 1.8rem;
-  margin-right: 10px;
+font-size: 1.8rem;
+margin-right: 10px;
 }
 @media screen and (max-width: 1023px) {
-  footer div a i {
-    font-size: 1.3rem;
-  }
+footer div a i {
+  font-size: 1.3rem;
+}
 }
 @media screen and (max-width: 420px) {
-  footer div a i {
-    font-size: 1.3rem;
-  }
+footer div a i {
+  font-size: 1.3rem;
+}
 }
 @media screen and (max-width: 380px) {
-  footer div a i {
-    font-size: 1.2rem;
-  }
+footer div a i {
+  font-size: 1.2rem;
+}
 }
 footer .space_around {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+display: flex;
+flex-direction: column;
+justify-content: space-around;
 }
 @media screen and (max-width: 600px) {
-  footer .space_around {
-    display: none;
-  }
+footer .space_around {
+  display: none;
+}
 }
 footer iframe {
-  padding: 5px;
-  width: 350px;
-  height: 200px;
+padding: 5px;
+width: 350px;
+height: 200px;
 }
 @media screen and (max-width: 767px) {
-  footer iframe {
-    width: 270px;
-    height: 120px;
-  }
+footer iframe {
+  width: 270px;
+  height: 120px;
+}
 }
 @media screen and (max-width: 480px) {
-  footer iframe {
-    width: 100vw;
-    height: 50vw;
-  }
+footer iframe {
+  width: 100vw;
+  height: 50vw;
+}
 }
