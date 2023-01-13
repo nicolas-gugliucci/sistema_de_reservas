@@ -1,4 +1,3 @@
-
 const socios = [];
 
 class Socio{

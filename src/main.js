@@ -19,9 +19,10 @@ const input_usuario = document.getElementById('usuario');
 
     //--------Variables fecha y hora-------/
 var DateTime = luxon.DateTime;
-const now = DateTime.now();
 DateTime.now().setZone("America/Montevideo");
-var f = {month: 'numeric', day: 'numeric'};
+const now = DateTime.now();
+const now_comprimido = now.setLocale('es').toFormat("EEEE' 'dd'/'LL");
+const Interval = luxon.Interval;
 
 //--------------------FUNCIONES GENERALES----------------------
 const removeAttributes = (element) => {
@@ -566,7 +567,7 @@ function removeAccents (str){
 //         actividades[actividades.indexOf(actividades.find((actividad) => actividad.nombre.toLocaleUpperCase() == act_rec.toLocaleUpperCase()))][dia].activo = true;
 //     }); 
 // }
-  
+
 function form_dia(){
     formulario_reserva.removeEventListener('submit', validar_form);
     formulario_reserva.innerHTML='';
@@ -584,7 +585,7 @@ function form_dia(){
         }else if(now.plus({ days: j }).weekday == 7){
             j++;
         }
-        dias[i] = [`${now.plus({ days: j }).weekdayLong[0].toUpperCase()}${now.plus({ days: j }).weekdayLong.substring(1)}`, `${now.plus({ days: j }).toLocaleString(f)}`];// ;
+        dias[i] = [`${now.plus({ days: j }).weekdayLong[0].toUpperCase()}${now.plus({ days: j }).weekdayLong.substring(1)}`, `${now.plus({ days: j }).setLocale('es').toFormat("EEEE' 'dd'/'LL")}`];// ;
         j++;
     };
     dias.forEach((dia) => {
@@ -602,7 +603,7 @@ function form_dia(){
         const label = document.createElement('label');
         label.setAttribute("class", "btn btn-secondary");
         label.setAttribute("for", `${removeAccents(`${dia[0].toLocaleLowerCase()}`)}`);
-        label.innerHTML = `${dia[0]} ${dia[1]}`;
+        label.innerHTML = `${dia[1]}`;
         div_dias.appendChild(input);
         div_dias.appendChild(label);
     });
@@ -654,6 +655,18 @@ function cancelar_(){
 //-------------------------------RESERVA PASO ACTIVIDADES (ACTIVO E INACTIVO)-----------------------------------
 function chequear_dia(){
     dia =  (document.querySelector(".btn-check:checked")).id;
+    const dia_completo = document.querySelector(`label[for=${dia}]`).innerHTML;
+    //console.log(now.setLocale('es').toFormat("EEEE' 'dd'/'LL"));
+    const h = DateTime.fromFormat(`${dia_completo}`, "EEEE' 'dd'/'LL", {locale: 'es-ES'});
+    let o = Interval.fromDateTimes(h, now);
+    if (o.length('days') > 1 ){
+        console.log('eliminar reserva');
+        //guardar en la reserva la fecha en formato h y luego al mostrar las reservas hacer el check 
+        //en actividades una vez que cambia el dia el dia que paso deberia quedar en default|| poderia ser que recorra cada socio y actualice cada vez que entra un socio
+    }
+    // const h =DateTime.fromFormat(`${dia}`, "EEEE' 'dd'/'LL");
+    // console.log(h.setLocale('es').toFormat("EEEE' 'dd'/'LL"))
+    //console.log(document.querySelector(`label[for=${dia}]`).innerHTML)
     const div_actividades_diarias = document.getElementById('div_actividades_diarias');
     let i = 0;
     div_actividades_diarias.innerHTML='';
