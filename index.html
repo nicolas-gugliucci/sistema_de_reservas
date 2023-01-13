@@ -7,13 +7,13 @@
     <title>Club Social y Deportivo FING</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <link rel="shortcut icon" href="./fotos/logo.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="./public/images/logo.png">
+    <link rel="stylesheet" href="./public/css/style.css">
     
 </head>
 <body>
     <header id="header">
-        <img src="./fotos/logo.png" alt="Logo del Club Social y Deportivo FING">
+        <img src="../public/images/logo.png" alt="Logo del Club Social y Deportivo FING">
         <h1>Club Social y Deportivo FING</h1>
         <div>
             <button id="login"><i class="bi bi-person-circle"></i></button>
@@ -36,13 +36,13 @@
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="./fotos/gimnasia.jpg" class="d-block w-100" alt="gym">
+                    <img src="./public/images/gimnasia.jpg" class="d-block w-100" alt="gym">
                 </div>
                 <div class="carousel-item">
-                    <img src="./fotos/basket.jpg" class="d-block w-100" alt="basketball">
+                    <img src="./public/images/basket.jpg" class="d-block w-100" alt="basketball">
                 </div>
                 <div class="carousel-item">
-                    <img src="./fotos/volley.jpg" class="d-block w-100" alt="volleyball">
+                    <img src="./public/images/volley.jpg" class="d-block w-100" alt="volleyball">
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
@@ -111,9 +111,14 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.2.1/build/global/luxon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-    <script src="actividades.js"></script>
-    <script src="socios.js"></script>
-    <script src="main.js"></script>
+    <script src="./src/data/actividades.js"></script>
+    <script src="./src/data/socios.js"></script>
+    <script src="./src/main.js"></script>
+    <!-- <script src="./src/components/login/login.js"></script>
+    <script src="./src/components/singup/singup.js"></script>
+    <script src="./src/components/reserv/reserv.js"></script>
+    <script src="./src/components/cancel/cancel.js"></script> -->
+    <script src="./src/index.js"></script>
     
 </body>
 </html>

@@ -35,6 +35,13 @@ const removeAttributes = (element) => {
     };
 };
 
+let actividades = [];
+async function obtener_actividades(){
+    const resp = await fetch('../src/data/actividades.json');
+    const data = await resp.json();
+    actividades = data;
+};
+
 function actualizar_disponibilidades(actividades, actividad, dia, hora){
     const obj_actividad = actividades.find((acti) => acti.nombre == (actividad[0].toUpperCase() + actividad.substring(1)));
     const indice = actividades.indexOf(obj_actividad);
@@ -70,48 +77,52 @@ function actualizar_disponibilidades(actividades, actividad, dia, hora){
 };
 
 //-----------------------------INSERTA GRILLA DE ACTIVIDADES Y HORARIOS--------------------------
-const div_actividadess = document.getElementById('actividades');
-actividades_totales().forEach((actividad) => {
-    const h3 = document.createElement('h3');
-    i%2 != 0 ? h3.setAttribute("class", "oscuro"): h3.setAttribute("class", "claro");
-    h3.innerHTML = `${actividad}`;
-    div_actividadess.append(h3);
-    i++;
-});
-i=1;
-const div_lmv = document.getElementById('lmv');
-const div_mj = document.getElementById('mj');
-actividades_totales().forEach((actividad) =>  {
-    const div_horario_lmv = document.createElement('div');
-    if (actividades_por_dia('lunes').includes(actividad) && actividades_por_dia('miercoles').includes(actividad) && actividades_por_dia('viernes').includes(actividad)){
-        i%2 != 0 ? div_horario_lmv.setAttribute("class", "oscuro"): div_horario_lmv.setAttribute("class", "claro");
-        div_horario_lmv.innerHTML = '';
-        div_lmv.append(div_horario_lmv);
-        horarios(actividad, 'lunes').forEach((horario) => {
-            const p = document.createElement('p');
-            p.innerHTML = `${horario}`;
-            div_horario_lmv.appendChild(p);
-        });
-    }else{
-        i%2 != 0 ? div_horario_lmv.setAttribute("class", "oscuro"): div_horario_lmv.setAttribute("class", "claro");
-        div_lmv.append(div_horario_lmv);
-    };
-    const div_horario_mj = document.createElement('div');
-    if (actividades_por_dia('martes').includes(actividad) && actividades_por_dia('jueves').includes(actividad)){
-        i%2 != 0 ? div_horario_mj.setAttribute("class", "oscuro"): div_horario_mj.setAttribute("class", "claro");
-        div_horario_mj.innerHTML = '';
-        div_mj.append(div_horario_mj);
-        horarios(actividad, 'martes').forEach((horario) => {
-            const p = document.createElement('p');
-            p.innerHTML = `${horario}`;
-            div_horario_mj.appendChild(p);
-        });
-    }else{
-        i%2 != 0 ? div_horario_mj.setAttribute("class", "oscuro"): div_horario_mj.setAttribute("class", "claro");
-        div_mj.append(div_horario_mj);
-    };
-    i++;
-})
+async function grilla_actividades(){
+    await obtener_actividades();
+    const div_actividadess = document.getElementById('actividades');
+    actividades_totales().forEach((actividad) => {
+        const h3 = document.createElement('h3');
+        i%2 != 0 ? h3.setAttribute("class", "oscuro"): h3.setAttribute("class", "claro");
+        h3.innerHTML = `${actividad}`;
+        div_actividadess.append(h3);
+        i++;
+    });
+    i=1;
+    const div_lmv = document.getElementById('lmv');
+    const div_mj = document.getElementById('mj');
+    actividades_totales().forEach((actividad) =>  {
+        const div_horario_lmv = document.createElement('div');
+        if (actividades_por_dia('lunes').includes(actividad) && actividades_por_dia('miercoles').includes(actividad) && actividades_por_dia('viernes').includes(actividad)){
+            i%2 != 0 ? div_horario_lmv.setAttribute("class", "oscuro"): div_horario_lmv.setAttribute("class", "claro");
+            div_horario_lmv.innerHTML = '';
+            div_lmv.append(div_horario_lmv);
+            horarios(actividad, 'lunes').forEach((horario) => {
+                const p = document.createElement('p');
+                p.innerHTML = `${horario}`;
+                div_horario_lmv.appendChild(p);
+            });
+        }else{
+            i%2 != 0 ? div_horario_lmv.setAttribute("class", "oscuro"): div_horario_lmv.setAttribute("class", "claro");
+            div_lmv.append(div_horario_lmv);
+        };
+        const div_horario_mj = document.createElement('div');
+        if (actividades_por_dia('martes').includes(actividad) && actividades_por_dia('jueves').includes(actividad)){
+            i%2 != 0 ? div_horario_mj.setAttribute("class", "oscuro"): div_horario_mj.setAttribute("class", "claro");
+            div_horario_mj.innerHTML = '';
+            div_mj.append(div_horario_mj);
+            horarios(actividad, 'martes').forEach((horario) => {
+                const p = document.createElement('p');
+                p.innerHTML = `${horario}`;
+                div_horario_mj.appendChild(p);
+            });
+        }else{
+            i%2 != 0 ? div_horario_mj.setAttribute("class", "oscuro"): div_horario_mj.setAttribute("class", "claro");
+            div_mj.append(div_horario_mj);
+        };
+        i++;
+    })
+}
+
 
 //------------------------------EVENTOS BÁSICOS--------------------------------
 
@@ -150,9 +161,14 @@ if (localStorage?.getItem('socios') != undefined){
     socios.push(socio);
     });
 };
-if (localStorage?.getItem('actividades') != undefined){
-    actividades = JSON.parse(localStorage.getItem('actividades'));
-};
+async function obt_act(){
+    if (localStorage?.getItem('actividades') != undefined){
+        actividades = JSON.parse(localStorage.getItem('actividades'));
+    }else{
+        await obtener_actividades();
+    };
+}
+obt_act();
 if (localStorage?.getItem('dias_disponibles') != undefined){
     dias_disponibles = JSON.parse(localStorage.getItem('dias_disponibles'));
 };
@@ -163,6 +179,7 @@ if (sessionStorage?.getItem('sesion_iniciada') != undefined){
     socio_ingresado.reservado = datos_sesion_iniciada.reservado;
     ingresar();
 };
+
 
 //----------------------------CLICK EN LOGIN------------------------------------
 function desplegar_login(){
@@ -239,12 +256,11 @@ function proceso_registro(){
 let socios_del_club = [];
 
 async function socio_del_club(){
-    const resp = await fetch('./socios.json');
+    const resp = await fetch('../src/data/socios.json');
     const data = await resp.json();
     socios_del_club = data;
 };
 
-socio_del_club();
 async function confirmar_contrasenas(e){
     e.preventDefault();
     const registro_form = document.getElementById('registro_form');
@@ -568,7 +584,6 @@ function form_dia(){
         }else if(now.plus({ days: j }).weekday == 7){
             j++;
         }
-        console.log(now.plus({ days: j }).weekdayLong[0].toUpperCase()+now.plus({ days: j }).weekdayLong.substring(1))
         dias[i] = [`${now.plus({ days: j }).weekdayLong[0].toUpperCase()}${now.plus({ days: j }).weekdayLong.substring(1)}`, `${now.plus({ days: j }).toLocaleString(f)}`];// ;
         j++;
     };
