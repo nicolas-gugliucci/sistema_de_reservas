@@ -153,9 +153,6 @@ function ingresar(){
             body.insertBefore(section_resact, reservar);
         };
     };
-    console.log('ingreso')
-
-    console.log( actividades)
     //-------------------------Reservas------------------------------
     usuario_ingresado = 1;
     actividades_del_socio = actividades;
