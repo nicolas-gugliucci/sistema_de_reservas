@@ -38,12 +38,11 @@ function proceso_registro(){
 let socios_del_club = [];
 
 async function socio_del_club(){
-    const resp = await fetch('./socios.json');
+    const resp = await fetch('../src/data/socios.json');
     const data = await resp.json();
     socios_del_club = data;
 };
 
-socio_del_club();
 async function confirmar_contrasenas(e){
     e.preventDefault();
     const registro_form = document.getElementById('registro_form');

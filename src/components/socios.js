@@ -9,13 +9,14 @@ class Socio{
         this.mail = mail;
         this.password = password;
         this.reservas_activas = 0;
-        this.reservado = [[0,0,0]]
+        this.reservado = [[0,0,0,0]]
     }
-    reserva(dia, hora, actividad){
+    reserva(dia, hora, actividad, dia_completo){
         this.reservado[this.reservas_activas][0]=dia;
         this.reservado[this.reservas_activas][1]=hora;
         this.reservado[this.reservas_activas][2]=actividad;
-        this.reservado.push([0,0,0]);
+        this.reservado[this.reservas_activas][3]=dia_completo;
+        this.reservado.push([0,0,0,0]);
         this.reservas_activas += 1;
     }
     cancelar(a_cancelar){

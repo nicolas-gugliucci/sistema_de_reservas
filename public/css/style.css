@@ -32,6 +32,9 @@ h3{
 h4, label{
   font-size: 2rem;
 }
+h5{
+  font-size: 1.7rem;
+}
 p, a, button, input, text{
   font-size: 1.5rem !important;
 }

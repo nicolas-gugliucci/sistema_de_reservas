@@ -1,3 +1,4 @@
+
 function actividades_totales(){
     let actividades_totales = [];
     let i = 0;

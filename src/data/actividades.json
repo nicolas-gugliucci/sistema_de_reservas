@@ -19,15 +19,13 @@
     {
         "nombre": "Ajedrez",
         "dias": ["martes", "jueves"],
-        "horas": {"martes":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"], "jueves":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"]},
+        "horas": {"martes":["10:00 - 11:00", "11:00 - 12:00"], "jueves":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"]},
         "martes": {
-           "0900":{"cupos":1, "activo": true},
             "1000":{"cupos":1, "activo": true},
             "1100":{"cupos":1, "activo": true},
             "activo": true
         },
         "jueves": {
-           "0900":{"cupos":20, "activo": true},
             "1000":{"cupos":20, "activo": true},
             "1100":{"cupos":20, "activo": true},
             "activo": true
@@ -59,9 +57,8 @@
     {
         "nombre": "Futbol",
         "dias": ["lunes", "martes", "miercoles", "jueves", "viernes"],
-        "horas": {"lunes":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"], "martes":["18:00 - 19:00","19:00 - 20:00", "20:00 - 21:00"], "miercoles":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"], "jueves":["18:00 - 19:00","19:00 - 20:00", "20:00 - 21:00"], "viernes":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"]},
+        "horas": {"lunes":["10:00 - 11:00", "11:00 - 12:00"], "martes":["18:00 - 19:00","19:00 - 20:00", "20:00 - 21:00"], "miercoles":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"], "jueves":["18:00 - 19:00","19:00 - 20:00", "20:00 - 21:00"], "viernes":["09:00 - 10:00","10:00 - 11:00", "11:00 - 12:00"]},
         "lunes": {
-           "0900":{"cupos":20, "activo": true},
             "1000":{"cupos":20, "activo": true},
             "1100":{"cupos":20, "activo": true},
             "activo": true
@@ -73,7 +70,6 @@
             "activo": true
         },
         "miercoles": {
-           "0900":{"cupos":20, "activo": true},
             "1000":{"cupos":20, "activo": true},
             "1100":{"cupos":20, "activo": true},
             "activo": true
@@ -85,7 +81,6 @@
             "activo": true
         },
         "viernes": {
-           "0900":{"cupos":20, "activo": true},
             "1000":{"cupos":20, "activo": true},
             "1100":{"cupos":20, "activo": true},
             "activo": true
