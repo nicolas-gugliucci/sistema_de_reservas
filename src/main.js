@@ -16,6 +16,7 @@ let dias_disponibles = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 let actividades_del_socio;
 let current = "inicio";
 let actividades = [];
+let socios_del_club = [];
 const input_usuario = document.getElementById('usuario');
 let dia_completo = '0';
     //--------Variables fecha y hora-------/
@@ -39,12 +40,6 @@ const removeAttributes = (element) => {
 
 function removeAccents (str){
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-};
-
-async function obtener_actividades(){
-    const resp = await fetch('../src/data/actividades.json');
-    const data = await resp.json();
-    actividades = data;
 };
 
 function actualizar_disponibilidades(actividades_array, actividad, dia, hora){
@@ -76,7 +71,7 @@ function actualizar_disponibilidades(actividades_array, actividad, dia, hora){
             if (dias_disponibles.includes(`${dia[0].toUpperCase()}${dia.substring(1)}`)){
                 dias_disponibles.splice(dias_disponibles.indexOf(`${dia[0].toUpperCase()}${dia.substring(1)}`),1);
             };
-        }    ;
+        };
     };
     return actividades_array;
 };
@@ -101,18 +96,15 @@ function eliminar_segun_hora(){
 //-----------------------------INSERTA GRILLA DE ACTIVIDADES Y HORARIOS--------------------------
 async function grilla_actividades(){
     await obt_act();
-    const div_actividadess = document.getElementById('actividades');
-    actividades_totales().forEach((actividad) => {
-        const h3 = document.createElement('h3');
-        i%2 != 0 ? h3.setAttribute("class", "oscuro"): h3.setAttribute("class", "claro");
-        h3.innerHTML = `${actividad}`;
-        div_actividadess.append(h3);
-        i++;
-    });
-    i=1;
+    let i=1;
+    const div_actividades = document.getElementById('actividades');
     const div_lmv = document.getElementById('lmv');
     const div_mj = document.getElementById('mj');
     actividades_totales().forEach((actividad) =>  {
+        const h3 = document.createElement('h3');
+        i%2 != 0 ? h3.setAttribute("class", "oscuro"): h3.setAttribute("class", "claro");
+        h3.innerHTML = `${actividad}`;
+        div_actividades.append(h3);
         const div_horario_lmv = document.createElement('div');
         if (actividades_por_dia('lunes').includes(actividad) && actividades_por_dia('miercoles').includes(actividad) && actividades_por_dia('viernes').includes(actividad)){
             i%2 != 0 ? div_horario_lmv.setAttribute("class", "oscuro"): div_horario_lmv.setAttribute("class", "claro");
@@ -174,28 +166,6 @@ function nav_scroll(){
 }
 
 //----------------------------RECUPERACION DE STORAGE------------------------------------
-if (localStorage?.getItem('socios') != undefined){
-    socios_guardados = JSON.parse(localStorage.getItem('socios'));
-    socios_guardados.forEach((socio_guardado) => {
-    const socio = new Socio(socio_guardado.nombre, socio_guardado.apellido, socio_guardado.documento, socio_guardado.edad, socio_guardado.mail, socio_guardado.password);
-    socio.reservas_activas = socio_guardado.reservas_activas;
-    socio.reservado = socio_guardado.reservado;
-    socios.push(socio);
-    });
-};
-if (localStorage?.getItem('actividades') != undefined){
-    actividades = JSON.parse(localStorage.getItem('actividades'));
-}
-if (localStorage?.getItem('dias_disponibles') != undefined){
-    dias_disponibles = JSON.parse(localStorage.getItem('dias_disponibles'));
-};
-if (sessionStorage?.getItem('sesion_iniciada') != undefined){
-    datos_sesion_iniciada = JSON.parse(sessionStorage.getItem('sesion_iniciada'));
-    socio_ingresado = new Socio(datos_sesion_iniciada.nombre, datos_sesion_iniciada.apellido, datos_sesion_iniciada.documento, datos_sesion_iniciada.edad, datos_sesion_iniciada.mail, datos_sesion_iniciada.password);
-    socio_ingresado.reservas_activas = datos_sesion_iniciada.reservas_activas;
-    socio_ingresado.reservado = datos_sesion_iniciada.reservado;
-    ingresar();
-};
 async function obt_act(){
     if (localStorage?.getItem('socios') != undefined){
         socios_guardados = JSON.parse(localStorage.getItem('socios'));
@@ -210,7 +180,9 @@ async function obt_act(){
         actividades = JSON.parse(localStorage.getItem('actividades'));
     }
     else{
-        await obtener_actividades();
+        const resp = await fetch('../src/data/actividades.json');
+        const data = await resp.json();
+        actividades = data;
     };
     if (localStorage?.getItem('dias_disponibles') != undefined){
         dias_disponibles = JSON.parse(localStorage.getItem('dias_disponibles'));
@@ -223,8 +195,6 @@ async function obt_act(){
         ingresar();
     };
 }
-
-
 
 //----------------------------CLICK EN LOGIN------------------------------------
 function desplegar_login(){
@@ -298,7 +268,6 @@ function proceso_registro(){
     registro_form.addEventListener("submit", confirmar_contrasenas);
     ocultar_login();
 }
-let socios_del_club = [];
 
 async function socio_del_club(){
     const resp = await fetch('../src/data/socios.json');
@@ -329,11 +298,12 @@ function registrar_socio(usuario, contrasena){
     socios.push(socio);
     localStorage.setItem('socios',JSON.stringify(socios));
     cerrar_div_registro();
-    Swal.fire(
-        'Registro exitoso',
-        '',
-        'success'
-    );
+    Swal.fire({
+        title: 'Registro exitoso',
+        icon: 'success',
+        background: '#00FFFF',
+        confirmButtonColor: '#079E9E'
+    });
 };
 
 function cerrar_div_registro(){
@@ -507,9 +477,6 @@ function ingresar(){
             body.insertBefore(section_resact, reservar);
         };
     };
-    console.log('ingreso')
-
-    console.log( actividades)
     //-------------------------Reservas------------------------------
     usuario_ingresado = 1;
     actividades_del_socio = actividades;
@@ -615,10 +582,6 @@ function validar_form(e){
 
 //------------------------------RESERVA PASO DÍAS (ACTIVO E INACTIVO)------------------------------
 function form_dia(){
-    console.log('formdia')
-
-    console.log( actividades)
-
     formulario_reserva.removeEventListener('submit', validar_form);
     formulario_reserva.innerHTML='';
     const dias = [];
@@ -710,10 +673,6 @@ function chequear_dia(){
     dia_completo = dia_completo_date.toFormat("EEEE' 'dd'/'LL");
     const div_actividades_diarias = document.getElementById('div_actividades_diarias');
     let i = 0;
-    console.log('chekdia')
-
-    console.log(actividades)
-
     div_actividades_diarias.innerHTML='';
     actividades_por_dia(dia).forEach((actividad) => {
         const div_form = document.createElement('div');
@@ -776,26 +735,21 @@ function mostrar_horarios(actividad, dia, actividad_anterior, dia_anterior){
         a_borrar.innerHTML = '';
     }
     let i = 0;
-    console.log('mosthor')
-
-    console.log(actividades)
-
     horarios(actividad, dia).forEach((hora) => {
         const div_horario_form = document.createElement('div');
         div_horario_form.setAttribute("class", "form-check");
         let hora_comprimida = Number (hora.slice(0,2).concat(hora.slice(3,5)));
         const obj_actividad = actividades_del_socio.find((acti) => acti.nombre == (actividad[0].toUpperCase() + actividad.substring(1)));
         const indice = actividades_del_socio.indexOf(obj_actividad);
-        // const dia_date = DateTime.fromFormat(`${dia}`, "EEEE", {locale: 'es-ES'});
-        // let interva = Interval.fromDateTimes(dia_date, now);
-        // if ((interva.length('days') < 1 )){
-        //     const hora_comprimida_date = DateTime.fromFormat(`${hora_comprimida}`, "HHmm", {locale: 'es-ES'});
-        //     let intervalo = Interval.fromDateTimes(now, hora_comprimida_date);
-        //     if (!(intervalo.length('hours') > 0 )){
-        //         actividades_del_socio[indice][dia][hora_comprimida].activo = false;
-        //         actualizar_disponibilidades(actividades, actividad, dia, hora_comprimida);
-        //     }
-        // }
+        const dia_date = DateTime.fromFormat(`${dia}`, "EEEE", {locale: 'es-ES'});
+        let interva = Interval.fromDateTimes(dia_date, now);
+        if ((interva.length('days') < 1 )){
+            const hora_comprimida_date = DateTime.fromFormat(`${hora_comprimida}`, "HHmm", {locale: 'es-ES'});
+            let intervalo = Interval.fromDateTimes(now, hora_comprimida_date);
+            if (!(intervalo.length('hours') > 0 )){
+                actualizar_disponibilidades(actividades, actividad, dia, hora_comprimida);
+            }
+        }
         if (actividades_del_socio[indice][dia][hora_comprimida].activo){
             if (i==0){
                 div_horario_form.innerHTML = `
@@ -886,30 +840,29 @@ function atras_(){
 
 //------------------------------------RESERVAR ACTIVIDAD----------------------------------
 function efectuar_reserva(e){
-    console.log('conf')
-
-    console.log( actividades)
-
     e.preventDefault();
     socio_ingresado.reserva(dia, horario_nuevo, actividad, dia_completo);
     localStorage.setItem('socios',JSON.stringify(socios));
     formulario_reserva.innerHTML = '';
     horario_nuevo_number = Number(horario_nuevo);
     restar_cupo(actividad, dia, horario_nuevo_number);
+    
+    actividades[actividades.indexOf(actividades.find((act) => act.nombre.toLocaleUpperCase() == actividad.toLocaleUpperCase()))][dia][horario_nuevo].activo=true;
+
     if (disponibilidad(actividad, dia, horario_nuevo) == 0){
         actividades = actualizar_disponibilidades(actividades, actividad, dia, horario_nuevo);
     };
     localStorage.setItem('actividades',JSON.stringify(actividades));
     localStorage.setItem('dias_disponibles',JSON.stringify(dias_disponibles));
-    Swal.fire(
-        'Reserva realizada',
-        'Su reserva ha sido realizada con éxito',
-        'success'
+    Swal.fire({
+        title: 'Reserva realizada',
+        text: 'Su reserva ha sido realizada con éxito',
+        icon: 'success',
+        background: '#00FFFF',
+        confirmButtonColor: '#079E9E'
+        }
+        
     );
-    console.log('postconf')
-
-    console.log(actividades)
-
     if (usuario_ingresado){
         sessionStorage.setItem('sesion_iniciada', JSON.stringify(socio_ingresado));
         formulario_reserva.removeEventListener("submit", efectuar_reserva);
@@ -948,9 +901,10 @@ function cancelar_reserva(i){
         buttonsStyling: false
     });
     swalWithBootstrapButtons.fire({
-        title: 'Está seguro que desea cancelar la reserva?',
+        title: '¿Está seguro que desea cancelar la reserva?',
         text: "",
         icon: 'warning',
+        background: '#00FFFF',
         showCancelButton: true,
         confirmButtonText: 'Cancelar reserva',
         cancelButtonText: 'Atrás',
@@ -959,11 +913,12 @@ function cancelar_reserva(i){
         if (result.isConfirmed) {
             efectuar_cancelacion(i, socio_ingresado);
             sessionStorage.setItem('sesion_iniciada', JSON.stringify(socio_ingresado));
-            swalWithBootstrapButtons.fire(
-                'Reserva cancelada!',
-                'Tu reserva ha sido cancelada con éxito',
-                'success'
-            );
+            swalWithBootstrapButtons.fire({
+                title: '¡Reserva cancelada!',
+                text: 'Tu reserva ha sido cancelada con éxito',
+                icon: 'success',
+                background: '#00FFFF',
+            });
             ingresar();
         };
     });
