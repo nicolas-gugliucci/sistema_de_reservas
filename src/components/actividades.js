@@ -12,7 +12,7 @@ function actividades_totales(){
 function actividades_por_dia(dia){
     let actividades_del_dia = [];
     let i = 0;
-    actividades.filter((actividad) => actividad.dias.includes(dia)).forEach((actividad) => {
+    actividades.filter((actividad) => actividad.dias.includes(dia.toLocaleLowerCase())).forEach((actividad) => {
         actividades_del_dia[i] = actividad.nombre;
         i++;
     });
@@ -20,7 +20,7 @@ function actividades_por_dia(dia){
 }
 
 function horarios(actividad_escogida, dia){
-    return actividades.find((actividad) => actividad.nombre.toLocaleUpperCase() == actividad_escogida.toLocaleUpperCase()).horas[dia];
+    return actividades.find((actividad) => actividad.nombre.toLocaleLowerCase() == removeAccents(actividad_escogida.toLocaleLowerCase())).horas[dia.toLocaleLowerCase()];
 }
 
 function disponibilidad(actividad_escogida, dia, hora){

@@ -43,6 +43,7 @@ function removeAccents (str){
 };
 
 function actualizar_disponibilidades(actividades_array, actividad, dia, hora){
+    dia = dia.toLocaleLowerCase()
     const obj_actividad = actividades_array.find((acti) => removeAccents(acti.nombre.toLocaleLowerCase()) == removeAccents(actividad.toLocaleLowerCase()));
     const indice = actividades_array.indexOf(obj_actividad);
     actividades_array[indice][dia][hora].activo = false;
@@ -73,7 +74,7 @@ function actualizar_disponibilidades(actividades_array, actividad, dia, hora){
             };
         };
     };
-    return actividades_array;
+    return JSON.parse(JSON.stringify(actividades_array));
 };
 
 //LIMPIEZA
@@ -479,7 +480,7 @@ function ingresar(){
     };
     //-------------------------Reservas------------------------------
     usuario_ingresado = 1;
-    actividades_del_socio = actividades;
+    actividades_del_socio = JSON.parse(JSON.stringify(actividades));
     for(let i = 0; i<socio_ingresado.reservas_activas; i++){
         actividades_del_socio = actualizar_disponibilidades(actividades_del_socio, socio_ingresado.reservado[i][2], socio_ingresado.reservado[i][0], socio_ingresado.reservado[i][1]);
     };
@@ -571,7 +572,7 @@ function validar_form(e){
             });
         };
     }else{
-        actividades_del_socio = actividades;
+        actividades_del_socio = JSON.parse(JSON.stringify(actividades));
         for(let i = 0; i<socio_ingresado.reservas_activas; i++){
             actividades_del_socio = actualizar_disponibilidades(actividades_del_socio, socio_ingresado.reservado[i][2], socio_ingresado.reservado[i][0], socio_ingresado.reservado[i][1]);
         };
@@ -602,6 +603,19 @@ function form_dia(){
         j++;
     };
     dias.forEach((dia) => {
+        const dia_date = DateTime.fromFormat(`${dia[1]}`, "EEEE' 'dd'/'LL", {locale: 'es-ES'});
+        let intervalo_dia = Interval.fromDateTimes(dia_date, now);
+        if ((intervalo_dia.length('days') < 1 )){
+            actividades_por_dia(dia[0]).forEach((actividad) => {
+                horarios(actividad, dia[0]).forEach((hora) => {
+                    const hora_date = DateTime.fromFormat(`${dia[1]} ${hora.slice(0,2).concat(hora.slice(3,5))}`, "EEEE' 'dd'/'LL' 'HHmm", {locale: 'es-ES'});
+                    let intervalo = Interval.fromDateTimes(hora_date, now);
+                    if ((intervalo.length('hours') > 0.25 )){
+                        actividades_del_socio = actualizar_disponibilidades(actividades_del_socio, actividad, dia[0], hora.slice(0,2).concat(hora.slice(3,5)));
+                    };
+                });
+            });
+        };
         const input = document.createElement('input');
         input.setAttribute("type", "radio");
         input.setAttribute("class", "btn-check");
@@ -741,15 +755,6 @@ function mostrar_horarios(actividad, dia, actividad_anterior, dia_anterior){
         let hora_comprimida = Number (hora.slice(0,2).concat(hora.slice(3,5)));
         const obj_actividad = actividades_del_socio.find((acti) => acti.nombre == (actividad[0].toUpperCase() + actividad.substring(1)));
         const indice = actividades_del_socio.indexOf(obj_actividad);
-        const dia_date = DateTime.fromFormat(`${dia}`, "EEEE", {locale: 'es-ES'});
-        let interva = Interval.fromDateTimes(dia_date, now);
-        if ((interva.length('days') < 1 )){
-            const hora_comprimida_date = DateTime.fromFormat(`${hora_comprimida}`, "HHmm", {locale: 'es-ES'});
-            let intervalo = Interval.fromDateTimes(now, hora_comprimida_date);
-            if (!(intervalo.length('hours') > 0 )){
-                actualizar_disponibilidades(actividades, actividad, dia, hora_comprimida);
-            }
-        }
         if (actividades_del_socio[indice][dia][hora_comprimida].activo){
             if (i==0){
                 div_horario_form.innerHTML = `
@@ -810,8 +815,6 @@ function mostrar_horarios(actividad, dia, actividad_anterior, dia_anterior){
 
 //--------------------------------RESERVA PASO CONFIRMACIÓN (ACTIVO E INACTIVO)-------------------------------
 function pantalla_confirmacion(e){
-
-
     e.preventDefault();
     formulario_reserva.removeEventListener("submit", pantalla_confirmacion);
     formulario_reserva.innerHTML = `
@@ -846,9 +849,6 @@ function efectuar_reserva(e){
     formulario_reserva.innerHTML = '';
     horario_nuevo_number = Number(horario_nuevo);
     restar_cupo(actividad, dia, horario_nuevo_number);
-    
-    actividades[actividades.indexOf(actividades.find((act) => act.nombre.toLocaleUpperCase() == actividad.toLocaleUpperCase()))][dia][horario_nuevo].activo=true;
-
     if (disponibilidad(actividad, dia, horario_nuevo) == 0){
         actividades = actualizar_disponibilidades(actividades, actividad, dia, horario_nuevo);
     };
