@@ -127,7 +127,7 @@ function form_dia(){
                     const hora_date = DateTime.fromFormat(`${dia[1]} ${hora.slice(0,2).concat(hora.slice(3,5))}`, "EEEE' 'dd'/'LL' 'HHmm", {locale: 'es-ES'});
                     let intervalo = Interval.fromDateTimes(hora_date, now);
                     if ((intervalo.length('hours') > 0.25 )){
-                        actividades_del_socio = actualizar_disponibilidades(actividades_del_socio, actividad, dia[0], hora.slice(0,2).concat(hora.slice(3,5)));
+                        //actividades_del_socio = actualizar_disponibilidades(actividades_del_socio, actividad, dia[0], hora.slice(0,2).concat(hora.slice(3,5)));
                     };
                 });
             });
@@ -150,10 +150,11 @@ function form_dia(){
         div_dias.appendChild(input);
         div_dias.appendChild(label);
     });
-    const div_actividades_diarias = document.createElement('div');
-    div_actividades_diarias.setAttribute("id", "div_actividades_diarias");
-    div_actividades_diarias.innerHTML = '';
-    formulario_reserva.append(div_actividades_diarias);
+    const div_actividades_clima = document.createElement('div');
+    div_actividades_clima.setAttribute("id", "div_actividades_clima");
+    div_actividades_clima.style.display = "flex";
+    div_actividades_clima.style.justifyContent = "space-between";
+    formulario_reserva.append(div_actividades_clima);
     const div_botones = document.createElement('div');
     div_botones.setAttribute("id", "div_botones");
     formulario_reserva.append(div_botones);
@@ -201,9 +202,11 @@ function chequear_dia(){
     dia_completo = document.querySelector(`label[for=${dia}]`).innerHTML.toLowerCase();
     const dia_completo_date = DateTime.fromFormat(`${dia_completo}`, "EEEE' 'dd'/'LL", {locale: 'es-ES'});
     dia_completo = dia_completo_date.toFormat("EEEE' 'dd'/'LL");
-    const div_actividades_diarias = document.getElementById('div_actividades_diarias');
+    const div_actividades_diarias = document.createElement('div');
+    div_actividades_diarias.setAttribute("id", "div_actividades_diarias");
+    const div_actividades_clima = document.getElementById("div_actividades_clima");
+    div_actividades_clima.innerHTML = '';
     let i = 0;
-    div_actividades_diarias.innerHTML='';
     actividades_por_dia(dia).forEach((actividad) => {
         const div_form = document.createElement('div');
         div_form.setAttribute("class", "form-check");
@@ -239,6 +242,7 @@ function chequear_dia(){
         div_horarios.innerHTML='';
         div_actividades_diarias.append(div_horarios);
     });
+    div_actividades_clima.append(div_actividades_diarias);
     horario_nuevo = undefined;
     chequear_actividad();
     div_actividades_diarias.addEventListener('change', chequear_actividad);
@@ -251,6 +255,9 @@ function chequear_actividad(){
     const horario = (document?.querySelector(".horarios_form:checked"))?.id;
     horario == horario_nuevo && mostrar_horarios(actividad, dia, actividad_anterior, dia_anterior);
     horario_nuevo = (document.querySelector(".horarios_form:checked")).id;
+    console.log(dia_completo)
+    console.log(horario_nuevo)
+    pronostico(LATITUD, LONGITUD, APIKEY, dia_completo, horario_nuevo);
     actividad_anterior = actividad;
     dia_anterior = dia;
     const pre_confirma = document.getElementById('pre_confirma');
