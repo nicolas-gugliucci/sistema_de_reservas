@@ -1,4 +1,3 @@
-
 function actividades_totales(){
     let actividades_totales = [];
     let i = 0;
@@ -20,7 +19,7 @@ function actividades_por_dia(dia){
 }
 
 function horarios(actividad_escogida, dia){
-    return actividades.find((actividad) => actividad.nombre.toLocaleLowerCase() == removeAccents(actividad_escogida.toLocaleLowerCase())).horas[dia.toLocaleLowerCase()];
+    return actividades.find((actividad) => removeAccents(actividad.nombre.toLocaleLowerCase()) == removeAccents(actividad_escogida.toLocaleLowerCase())).horas[dia.toLocaleLowerCase()];
 }
 
 function disponibilidad(actividad_escogida, dia, hora){
@@ -35,3 +34,37 @@ function sumar_cupo(actividad_escogida, dia, hora){
     actividades[actividades.indexOf(actividades.find((actividad) => actividad.nombre.toLocaleUpperCase() == actividad_escogida.toLocaleUpperCase()))][dia][hora].cupos++;
 }
 
+function actualizar_disponibilidades(actividades_array, actividad, dia, hora){
+    dia = dia.toLocaleLowerCase()
+    const obj_actividad = actividades_array.find((acti) => removeAccents(acti.nombre.toLocaleLowerCase()) == removeAccents(actividad.toLocaleLowerCase()));
+    const indice = actividades_array.indexOf(obj_actividad);
+    actividades_array[indice][dia][hora].activo = false;
+    let actividad_disponible;
+    for(const horas in actividades_array[indice][dia]){
+        if (actividades_array[indice][dia][horas].activo){
+            actividad_disponible = 1;
+            break;
+        }else{
+           actividad_disponible = 0;
+        };
+    };
+    if (!actividad_disponible){
+        actividades_array[indice][dia].activo = false;
+        let dia_disponible;
+        const act_del_dia = actividades_por_dia(dia);
+        for(const act of act_del_dia){
+            if(actividades_array.find((acti) => acti.nombre == act)[dia].activo){
+                dia_disponible = 1;
+                break;
+            }else{
+                dia_disponible = 0;
+            };
+        };
+        if(!dia_disponible){
+            if (dias_disponibles.includes(`${dia[0].toUpperCase()}${dia.substring(1)}`)){
+                dias_disponibles.splice(dias_disponibles.indexOf(`${dia[0].toUpperCase()}${dia.substring(1)}`),1);
+            };
+        };
+    };
+    return JSON.parse(JSON.stringify(actividades_array));
+};
