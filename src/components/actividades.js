@@ -11,7 +11,7 @@ function actividades_totales(){
 function actividades_por_dia(dia){
     let actividades_del_dia = [];
     let i = 0;
-    actividades.filter((actividad) => actividad.dias.includes(dia.toLocaleLowerCase())).forEach((actividad) => {
+    actividades.filter((actividad) => actividad.dias.includes(removeAccents(dia).toLocaleLowerCase())).forEach((actividad) => {
         actividades_del_dia[i] = actividad.nombre;
         i++;
     });
@@ -19,23 +19,24 @@ function actividades_por_dia(dia){
 }
 
 function horarios(actividad_escogida, dia){
-    return actividades.find((actividad) => removeAccents(actividad.nombre.toLocaleLowerCase()) == removeAccents(actividad_escogida.toLocaleLowerCase())).horas[dia.toLocaleLowerCase()];
+    return actividades.find((actividad) => removeAccents(actividad.nombre.toLocaleLowerCase()) == removeAccents(actividad_escogida.toLocaleLowerCase())).horas[removeAccents(dia).toLocaleLowerCase()];
 }
 
 function disponibilidad(actividad_escogida, dia, hora){
-    return cupos_disponibles = actividades.find((actividad) => actividad.nombre.toLocaleUpperCase() == actividad_escogida.toLocaleUpperCase())[dia][hora].cupos;
+    return cupos_disponibles = actividades.find((actividad) => removeAccents(actividad.nombre).toLocaleUpperCase() == removeAccents(actividad_escogida).toLocaleUpperCase())[removeAccents(dia).toLocaleLowerCase()][hora].cupos;
 }
 
 function restar_cupo(actividad_escogida, dia, hora){
-    actividades[actividades.indexOf(actividades.find((actividad) => actividad.nombre.toLocaleUpperCase() == actividad_escogida.toLocaleUpperCase()))][dia][hora].cupos--;
+    actividades[actividades.indexOf(actividades.find((actividad) => removeAccents(actividad.nombre).toLocaleUpperCase() == removeAccents(actividad_escogida).toLocaleUpperCase()))][removeAccents(dia).toLocaleLowerCase()][hora].cupos--;
 }
 
 function sumar_cupo(actividad_escogida, dia, hora){
-    actividades[actividades.indexOf(actividades.find((actividad) => actividad.nombre.toLocaleUpperCase() == actividad_escogida.toLocaleUpperCase()))][dia][hora].cupos++;
+    actividades[actividades.indexOf(actividades.find((actividad) => removeAccents(actividad.nombre).toLocaleUpperCase() == removeAccents(actividad_escogida).toLocaleUpperCase()))][removeAccents(dia).toLocaleLowerCase()][hora].cupos++;
 }
 
 function actualizar_disponibilidades(actividades_array, actividad, dia, hora){
-    dia = dia.toLocaleLowerCase()
+    const dia_con_tilde = dia;
+    dia = removeAccents(dia).toLocaleLowerCase()
     const obj_actividad = actividades_array.find((acti) => removeAccents(acti.nombre.toLocaleLowerCase()) == removeAccents(actividad.toLocaleLowerCase()));
     const indice = actividades_array.indexOf(obj_actividad);
     actividades_array[indice][dia][hora].activo = false;
@@ -61,8 +62,8 @@ function actualizar_disponibilidades(actividades_array, actividad, dia, hora){
             };
         };
         if(!dia_disponible){
-            if (dias_disponibles.includes(`${dia[0].toUpperCase()}${dia.substring(1)}`)){
-                dias_disponibles.splice(dias_disponibles.indexOf(`${dia[0].toUpperCase()}${dia.substring(1)}`),1);
+            if (dias_disponibles.includes(`${dia_con_tilde[0].toUpperCase()}${dia_con_tilde.substring(1)}`)){
+                dias_disponibles.splice(dias_disponibles.indexOf(`${dia_con_tilde[0].toUpperCase()}${dia_con_tilde.substring(1)}`),1);
             };
         };
     };

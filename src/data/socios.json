@@ -1,16 +1,37 @@
 [
     {
-    "nombre": "Alberto",
-    "apellido": "Rodriguez",
-    "documento": 12345678,
-    "edad": 50,
-    "mail": "alberto.r@gmail.com"
+        "nombre": "Alberto",
+        "apellido": "Rodriguez",
+        "documento": 12345678,
+        "edad": 50,
+        "mail": "alberto.r@gmail.com"
     },
     {
-    "nombre": "Nicolas",
-    "apellido": "Gugliucci",
-    "documento": 56594112,
-    "edad": 20,
-    "mail": "gugliucci.nicolas@gmail.com"
+        "nombre": "Nicolas",
+        "apellido": "Gugliucci",
+        "documento": 56594112,
+        "edad": 20,
+        "mail": "gugliucci.nicolas@gmail.com"
+    },
+    {
+        "nombre": "Martín",
+        "apellido": "Gugliucci",
+        "documento": 56594087,
+        "edad": 17,
+        "mail": "martin.g@gmail.com"
+    },
+    {
+        "nombre": "Eduardo",
+        "apellido": "Gugliucci",
+        "documento": 19170759,
+        "edad": 57,
+        "mail": "eduardo.g@gmail.com"
+    },
+    {
+        "nombre": "Ana María",
+        "apellido": "Nasta",
+        "documento": 28655813,
+        "edad": 60,
+        "mail": "ana.n@gmail.com"
     }
 ]

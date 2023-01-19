@@ -87,7 +87,7 @@ function ingresar(){
     nombre_div_ant?.remove();
     const nombre_div = document.createElement('p');
     nombre_div.style.margin = "0 0 0 10px";
-    nombre_div.innerHTML = `${(socio_ingresado.nombre).toLocaleUpperCase()} ${(socio_ingresado.apellido).toLocaleUpperCase()}`;
+    nombre_div.innerHTML = `${(socio_ingresado.nombre)[0].toLocaleUpperCase()}${(socio_ingresado.nombre).substring(1)} ${(socio_ingresado.apellido)[0].toLocaleUpperCase()}${(socio_ingresado.apellido).substring(1)}`;
     button_login.append(nombre_div);
 
     //---------------------Nav------------------------

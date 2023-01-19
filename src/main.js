@@ -106,7 +106,7 @@ function form_dia(){
     div_dias.setAttribute("id", "div_dias");
     div_dias.innerHTML = '';
     formulario_reserva.append(div_dias);
-    let i= 0;
+    let k= 0;
     let j = 0;
     for (let i=0;i<=4;i++){
         if (now.plus({ days: j }).weekday == 6){
@@ -121,13 +121,13 @@ function form_dia(){
     dias.forEach((dia) => {
         const dia_date = DateTime.fromFormat(`${dia[1]}`, "EEEE' 'dd'/'LL", {locale: 'es-ES'});
         let intervalo_dia = Interval.fromDateTimes(dia_date, now);
-        if ((intervalo_dia.length('days') < 1 )){
+        if (intervalo_dia.length('days') < 1 ){
             actividades_por_dia(dia[0]).forEach((actividad) => {
                 horarios(actividad, dia[0]).forEach((hora) => {
                     const hora_date = DateTime.fromFormat(`${dia[1]} ${hora.slice(0,2).concat(hora.slice(3,5))}`, "EEEE' 'dd'/'LL' 'HHmm", {locale: 'es-ES'});
                     let intervalo = Interval.fromDateTimes(hora_date, now);
                     if ((intervalo.length('hours') > 0.25 )){
-                        //actividades_del_socio = actualizar_disponibilidades(actividades_del_socio, actividad, dia[0], hora.slice(0,2).concat(hora.slice(3,5)));
+                        actividades_del_socio = actualizar_disponibilidades(actividades_del_socio, actividad, dia[0], hora.slice(0,2).concat(hora.slice(3,5)));
                     };
                 });
             });
@@ -138,10 +138,11 @@ function form_dia(){
         input.setAttribute("name", "dias");
         input.setAttribute("id", `${removeAccents(`${dia[0].toLocaleLowerCase()}`)}`);
         input.setAttribute("autocomplete", `off`);
-        !(dias_disponibles.includes(`${dia[0]}`)) && input.setAttribute("disabled", "");
-        if(i==0){
-            input.setAttribute("checked", "")
-            i++;
+        if(!(dias_disponibles.includes(`${dia[0]}`))){
+            input.setAttribute("disabled", "");
+        }else if(k==0){
+            input.setAttribute("checked", "");
+            k++;
         };
         const label = document.createElement('label');
         label.setAttribute("class", "btn btn-secondary");
@@ -255,8 +256,6 @@ function chequear_actividad(){
     const horario = (document?.querySelector(".horarios_form:checked"))?.id;
     horario == horario_nuevo && mostrar_horarios(actividad, dia, actividad_anterior, dia_anterior);
     horario_nuevo = (document.querySelector(".horarios_form:checked")).id;
-    console.log(dia_completo)
-    console.log(horario_nuevo)
     pronostico(LATITUD, LONGITUD, APIKEY, dia_completo, horario_nuevo);
     actividad_anterior = actividad;
     dia_anterior = dia;
@@ -384,7 +383,6 @@ function efectuar_reserva(e){
         background: '#00FFFF',
         confirmButtonColor: '#079E9E'
         }
-        
     );
     if (usuario_ingresado){
         sessionStorage.setItem('sesion_iniciada', JSON.stringify(socio_ingresado));
@@ -435,6 +433,10 @@ function cancelar_reserva(i){
     }).then((result) => {
         if (result.isConfirmed) {
             efectuar_cancelacion(i, socio_ingresado);
+            const li_resact = document.getElementById('li_resact');
+            li_resact.remove();
+            const resact = document.getElementById('resact');
+            resact.remove();
             sessionStorage.setItem('sesion_iniciada', JSON.stringify(socio_ingresado));
             swalWithBootstrapButtons.fire({
                 title: '¡Reserva cancelada!',
@@ -450,6 +452,7 @@ function cancelar_reserva(i){
 function efectuar_cancelacion(i, socio){
     const actividad_cancelar = socio.reservado[i][2];
     const dia_cancelar = socio.reservado[i][0];
+    console.log(dia_cancelar)
     const hora_cancelar = Number(socio.reservado[i][1]);
     sumar_cupo(actividad_cancelar, dia_cancelar, hora_cancelar);
     const obj_actividad = actividades.find((acti) => acti.nombre == (actividad_cancelar[0].toUpperCase() + actividad_cancelar.substring(1)));
@@ -457,13 +460,13 @@ function efectuar_cancelacion(i, socio){
     actividades[indice][dia_cancelar][hora_cancelar].activo = true;
     actividades[indice][dia_cancelar].activo = true;
     if (!dias_disponibles.includes(`${dia_cancelar[0].toUpperCase()}${dia_cancelar.substring(1)}`)){
-        dias_disponibles.push(`${dia_cancelar[0].toUpperCase()}${dia_cancelar.substring(1)}`);
-    }
+        if(dia_cancelar.toLocaleLowerCase() == 'miercoles'){
+            dias_disponibles.push('Miércoles');
+        }else{
+            dias_disponibles.push(`${dia_cancelar[0].toUpperCase()}${dia_cancelar.substring(1)}`);
+        };
+    };
     socio.cancelar(i);
-    const li_resact = document.getElementById('li_resact');
-    li_resact.remove();
-    const resact = document.getElementById('resact');
-    resact.remove();
     localStorage.setItem('socios',JSON.stringify(socios));
     localStorage.setItem('actividades',JSON.stringify(actividades));
     localStorage.setItem('dias_disponibles',JSON.stringify(dias_disponibles));

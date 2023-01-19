@@ -93,13 +93,11 @@ nav ul li{
 }
 
 .li_activo a{
-color: rgb(171, 254, 255);
-text-decoration: wavy underline;;
+color: rgb(255, 237, 120);
 }
 
 .li_inactivo a{
 color: black;
-text-decoration: none;
 }
 
 #login{
