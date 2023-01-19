@@ -81,7 +81,7 @@ async function obt_act(){
         actividades = JSON.parse(localStorage.getItem('actividades'));
     }
     else{
-        const resp = await fetch('./src/data/actividades.json');
+        const resp = await fetch('../src/data/actividades.json');
         const data = await resp.json();
         actividades = data;
     };
