@@ -1,8 +1,9 @@
 const LATITUD = '-34.9058916';
 const LONGITUD = '-56.1913095';
+const APIKEY = '0db3ae95bb2063a463ae97ddebeda0cc'; //APIKEY = process.env.APK
 
-const pronostico = async (latitud, longitud, dia, hora) => {
-    const response_clima = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitud}&lon=${longitud}&lang=es&appid=${process.env.APK}&units=meters`);
+const pronostico = async (latitud, longitud, apikey, dia, hora) => {
+    const response_clima = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitud}&lon=${longitud}&lang=es&appid=${apikey}&units=meters`);
     const data_clima = await response_clima.json();
     const dia_y_hora = DateTime.fromFormat(`${dia} ${hora}`, "EEEE' 'dd'/'LL' 'HHmm", {locale: 'es-ES'});
     const pronostico_data = data_clima.list.find((pronostico) => {
