@@ -13,7 +13,7 @@ El sistema de reservas se basa en las reservas semanales de actividades para un 
 - `Funcionalidad 3-b`: Consulta de reservas activas
 - `Funcionalidad 3-c`: Cancelación de actividades
 
-## 🛠️ Abre y ejecuta el proyecto
+## 🛠️ Ejecución del proyecto
 
 **Para la ejecución del simulador es necesario registrarse con uno de los socios existentes en la base de datos, registrandolo con su documento de identidad y una contraseña a elección.**
 
