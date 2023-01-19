@@ -26,12 +26,6 @@ class Socio{
     }
 };
 
-async function socio_del_club(){
-    const resp = await fetch('../data/socios.json');
-    const data = await resp.json();
-    socios_del_club = data;
-};
-
 //------------------------------REGISTRO DE USUARIO------------------------------
 function proceso_registro(){
     const inicio_registro = document.getElementById('registro');
