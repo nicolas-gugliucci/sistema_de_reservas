@@ -1,0 +1,22 @@
+{
+  "name": "sistema_reservas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicolas-gugliucci/Sistema_de_reservas.git"
+  },
+  "author": "gugliucci.nicolas@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicolas-gugliucci/Sistema_de_reservas/issues"
+  },
+  "homepage": "https://github.com/nicolas-gugliucci/Sistema_de_reservas#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  }
+}
