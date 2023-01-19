@@ -1,6 +1,6 @@
 <h1 align="center">Sistema de reservas </h1>
 
-El sistema de reservas se basa en las reservas semanales de actividades para un club deportivo. Permitiendo al usuario reservar su actividad con una antelación máxima de una semana. Dicha reserva se mantendrá hasta 15 minutos luego de iniciada la actividad, dandole ese espacio de tiempo al socio para llegar. Además con el paso del tiempo se irán deshabilitando, a la hora de reservar, las actividades ya comenzadas.
+El sistema de reservas se basa en las reservas semanales de actividades para un club deportivo. Permitiendo al usuario reservar su actividad con una antelación máxima de una semana. Dicha reserva se mantendrá hasta 15 minutos luego de iniciada la actividad, dandole ese espacio temporal al socio para llegar. Además con el paso del tiempo se irán deshabilitando, a la hora de reservar, las actividades ya comenzadas.
 
 ## :hammer:Funcionalidades del proyecto
 
