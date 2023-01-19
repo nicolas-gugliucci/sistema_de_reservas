@@ -22,3 +22,4 @@ Documentos de identidad válidos:
 - `Socio Alberto Rodriguez`: 12345671
 - `Socio Nicolás Frenández`: 12345672
 - `Socio Martín Pérez`: 12345673
+
