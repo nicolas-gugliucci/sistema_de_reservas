@@ -4,7 +4,7 @@ El sistema de reservas se basa en las reservas semanales de actividades para un 
 
 ## :hammer:Funcionalidades del proyecto
 
-- `Funcionalidad 1`: Registro de usuarios (previamente cargado en la base de datos) a la página
+- `Funcionalidad 1`: Registro de usuarios (previamente cargados en la base de datos) a la página
 - `Funcionalidad 2`: Reserva rápida de actividad sin necesidad de iniciar sesión
 - `Funcionalidad 3`: Inicio de sesión
 - `Funcionalidad 3-a`: Reserva de actividades
