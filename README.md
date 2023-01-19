@@ -15,7 +15,7 @@ El sistema de reservas se basa en las reservas semanales de actividades para un 
 
 ## 🛠️ Ejecución del proyecto
 
-**Para la ejecución del simulador es necesario registrarse con uno de los socios existentes en la base de datos, registrandolo con su documento de identidad y una contraseña a elección.**
+**Para la ejecución del simulador es recomendable que el idioma del dispositivo se encuentre en español. Además es necesario, para registrarse, hacerlo con uno de los socios existentes en la base de datos, registrandolo con su documento de identidad y una contraseña a elección.**
 
 Documentos de identidad válidos:
 
