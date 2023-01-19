@@ -27,7 +27,7 @@ class Socio{
 };
 
 async function socio_del_club(){
-    const resp = await fetch('../src/data/socios.json');
+    const resp = await fetch('../data/socios.json');
     const data = await resp.json();
     socios_del_club = data;
 };
