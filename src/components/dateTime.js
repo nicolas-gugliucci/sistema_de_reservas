@@ -1,8 +1,7 @@
 //--------Variables fecha y hora-------/
 var DateTime = luxon.DateTime;
-DateTime.now().setZone("America/Montevideo");
-const now = DateTime.now();
-const now_comprimido = now.setLocale('es-ES').toFormat("EEEE' 'dd'/'LL");
+const now = DateTime.now().setLocale('es-ES').setZone("America/Montevideo");
+const now_comprimido = now.toFormat("EEEE' 'dd'/'LL");
 const Interval = luxon.Interval;
 
 //---------LIMPIEZA------------
