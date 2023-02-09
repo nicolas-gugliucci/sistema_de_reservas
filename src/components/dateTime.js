@@ -18,5 +18,3 @@ function eliminar_segun_hora(){
         };        
     });
 };
-
-//dfs
